@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground } from
 import { Link } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function OnboardingScreen() {
   const theme = useTheme();
