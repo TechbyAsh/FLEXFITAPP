@@ -139,10 +139,9 @@ export default function DashboardScreen() {
         style={[styles.workoutCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
         onPress={() => router.push('/workout-details')}
       >
-        <Image
-          source={require('../../assets/images/workout-placeholder.png')}
-          style={styles.workoutImage}
-        />
+        <View style={[styles.workoutImage, {backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
+          <Text style={{color: '#fff', fontSize: 12}}>Workout</Text>
+        </View>
         <View style={styles.workoutInfo}>
           <Text style={[styles.workoutTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
             {todaysWorkout.title}

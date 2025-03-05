@@ -26,21 +26,21 @@ export default function WorkoutsScreen() {
       title: 'HIIT Cardio Blast', 
       duration: '30 min', 
       level: 'Intermediate',
-      thumbnail: require('../../assets/images/workout-1.png'),
+      thumbnail: null, // Placeholder
     },
     { 
       id: 2, 
       title: 'Core Strength', 
       duration: '25 min', 
       level: 'Beginner',
-      thumbnail: require('../../assets/images/workout-2.png'),
+      thumbnail: null, // Placeholder
     },
     { 
       id: 3, 
       title: 'Full Body Power', 
       duration: '45 min', 
       level: 'Advanced',
-      thumbnail: require('../../assets/images/workout-3.png'),
+      thumbnail: null, // Placeholder
     },
   ];
 
@@ -183,11 +183,9 @@ export default function WorkoutsScreen() {
               style={[styles.videoCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
               onPress={() => router.push('/workout-video')}
             >
-              <Image
-                source={workout.thumbnail}
-                style={styles.videoThumbnail}
-                resizeMode="cover"
-              />
+              <View style={[styles.videoThumbnail, {backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
+                <Text style={{color: '#fff', fontSize: 14}}>Workout Thumbnail</Text>
+              </View>
               <View style={styles.playOverlay}>
                 <View style={[styles.playButton, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
                   <Ionicons name="play" size={24} color={theme.colors.secondary} />
