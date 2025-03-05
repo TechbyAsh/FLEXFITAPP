@@ -9,25 +9,15 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.colors.secondary,
+        tabBarInactiveTintColor: "#777",
         tabBarStyle: {
           backgroundColor: theme.colors.primary,
-          borderTopColor: theme.colors.border,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 8,
-          paddingTop: 8,
-          height: Platform.OS === 'ios' ? 88 : 70,
-        },
-        tabBarActiveTintColor: theme.colors.secondary,
-        tabBarInactiveTintColor: '#888888',
-        tabBarLabelStyle: {
-          fontFamily: theme.typography.fontFamily.medium,
-          fontSize: 12,
-        },
-        headerStyle: {
-          backgroundColor: theme.colors.primary,
-        },
-        headerTintColor: theme.colors.secondary,
-        headerTitleStyle: {
-          fontFamily: theme.typography.fontFamily.bold,
+          borderTopWidth: 0,
+          elevation: 0,
+          height: 60,
+          paddingBottom: 10,
         },
       }}
     >
