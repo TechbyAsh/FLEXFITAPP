@@ -1,7 +1,6 @@
 import { Tabs } from 'expo-router';
-import { Platform, StyleSheet, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -9,70 +8,70 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
-        tabBarActiveTintColor: theme.colors.secondary,
-        tabBarInactiveTintColor: "#777",
+        tabBarActiveTintColor: '#00E6CC',
+        tabBarInactiveTintColor: '#707070',
         tabBarStyle: {
-          backgroundColor: theme.colors.primary,
-          borderTopWidth: 0,
-          elevation: 0,
-          height: 60,
-          paddingBottom: 10,
+          backgroundColor: '#161B22',
+          borderTopColor: '#252A33',
+          borderTopWidth: 1,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          position: 'absolute',
+          height: 80,
+          paddingTop: 10,
+          paddingBottom: 20,
         },
+        headerStyle: {
+          backgroundColor: '#0D1117',
+        },
+        headerTintColor: theme.colors.text,
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          fontFamily: theme.typography.fontFamily.bold,
+        },
+        headerShadowVisible: false,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "Dashboard",
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons name="home" size={size} color={color} />
-            </View>
-          ),
+          title: 'Home',
+          tabBarIcon: ({ color }) => <Ionicons name="home-outline" size={24} color={color} />,
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="workouts"
         options={{
-          title: "Workouts",
-          tabBarIcon: ({ color, size }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons name="barbell" size={size} color={color} />
-            </View>
-          ),
+          title: 'Workouts',
+          tabBarIcon: ({ color }) => <Ionicons name="barbell-outline" size={24} color={color} />,
+          headerTitle: "My Workouts",
         }}
       />
       <Tabs.Screen
         name="nutrition"
         options={{
-          title: "Nutrition",
-          tabBarIcon: ({ color, size }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons name="restaurant" size={size} color={color} />
-            </View>
-          ),
+          title: 'Nutrition',
+          tabBarIcon: ({ color }) => <Ionicons name="nutrition-outline" size={24} color={color} />,
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="schedule"
+        options={{
+          title: 'Schedule',
+          tabBarIcon: ({ color }) => <Ionicons name="calendar-outline" size={24} color={color} />,
+          headerTitle: "My Schedule",
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          tabBarIcon: ({ color, size }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons name="person" size={size} color={color} />
-            </View>
-          ),
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <Ionicons name="person-outline" size={24} color={color} />,
+          headerShown: false,
         }}
       />
     </Tabs>
   );
 }
-
-const styles = StyleSheet.create({
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

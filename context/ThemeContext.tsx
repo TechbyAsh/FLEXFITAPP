@@ -12,6 +12,22 @@ type ThemeType = {
     error: string;
     card: string;
     overlay: string;
+    gradients: {
+      primary: string[];
+      secondary: string[];
+      dark: string[];
+      card: string[];
+    };
+    glass: {
+      background: string;
+      border: string;
+      highlight: string;
+      shadow: string;
+    };
+    neomorphism: {
+      lightShadow: string;
+      darkShadow: string;
+    };
   },
   typography: {
     fontFamily: {
@@ -33,20 +49,20 @@ type ThemeType = {
 // Default theme
 const theme: ThemeType = {
   colors: {
-    primary: '#000000',
-    secondary: '#D4AF37', // Gold
+    primary: '#0D1117',
+    secondary: '#00E6CC',
     text: '#FFFFFF',
-    background: '#121212',
-    border: 'rgba(255, 255, 255, 0.1)',
+    background: '#0D1117',
+    border: '#252A33',
     success: '#4CAF50',
     error: '#F44336',
-    card: 'rgba(30, 30, 30, 0.75)',
+    card: '#161B22',
     overlay: 'rgba(0,0,0,0.7)',
     gradients: {
-      primary: ['#121212', '#1E1E1E'],
-      secondary: ['#D4AF37', '#F0C75E'],
-      dark: ['#000000', '#121212'],
-      card: ['rgba(30, 30, 30, 0.85)', 'rgba(20, 20, 20, 0.75)'],
+      primary: ['#00E6CC', '#00A3CC'],
+      secondary: ['#00E6CC', '#00A3CC'],
+      dark: ['#0D1117', '#161B22'],
+      card: ['rgba(22,27,34,0.9)', 'rgba(13,17,23,0.9)'],
     },
     glass: {
       background: 'rgba(30, 30, 30, 0.25)',
