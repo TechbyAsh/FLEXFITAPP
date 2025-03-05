@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useColorScheme } from 'react-native';
 
@@ -49,9 +48,9 @@ const lightTheme: Theme = {
   },
   typography: {
     fontFamily: {
-      regular: 'System',
-      medium: 'System',
-      bold: 'System',
+      regular: 'Montserrat-Regular',
+      medium: 'Montserrat-Medium',
+      bold: 'Montserrat-Bold',
     },
     fontSize: {
       xs: 12,
@@ -77,9 +76,9 @@ const darkTheme: Theme = {
   },
   typography: {
     fontFamily: {
-      regular: 'System',
-      medium: 'System',
-      bold: 'System',
+      regular: 'Montserrat-Regular',
+      medium: 'Montserrat-Medium',
+      bold: 'Montserrat-Bold',
     },
     fontSize: {
       xs: 12,
