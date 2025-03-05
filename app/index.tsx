@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { Link } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export default function OnboardingScreen() {
   const theme = useTheme();
@@ -13,17 +12,14 @@ export default function OnboardingScreen() {
     {
       title: "Welcome to FLEX",
       description: "Your personal fitness journey begins here.",
-      // image: require('../assets/images/onboarding-1.png')
     },
     {
       title: "Personalized Workouts",
       description: "Get customized 6-week plans tailored to your goals.",
-      // image: require('../assets/images/onboarding-2.png')
     },
     {
       title: "Nutrition & Mindset",
       description: "Complete guidance for both body and mind.",
-      // image: require('../assets/images/onboarding-3.png')
     }
   ];
 
@@ -40,88 +36,84 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <LinearGradient 
-      colors={['#000000', '#121212']} 
+    <ImageBackground 
+      source={require('../assets/images/flex-logo-bg.png')}
       style={styles.container}
+      resizeMode="cover"
     >
       <StatusBar style="light" />
 
-      <View style={styles.imageContainer}>
-        {/*  Image component removed */}
-        <View style={{backgroundColor: theme.colors.secondary, width: '100%', height: 300, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{color: theme.colors.primary, fontSize: 24}}>Placeholder Image</Text>
-        </View>
-      </View>
-
       <View style={styles.contentContainer}>
-        <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
-          {onboardingData[currentPage].title}
-        </Text>
+        <View style={styles.spacer} />
+        
+        <View style={styles.textContainer}>
+          <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
+            {onboardingData[currentPage].title}
+          </Text>
 
-        <Text style={[styles.description, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
-          {onboardingData[currentPage].description}
-        </Text>
+          <Text style={[styles.description, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
+            {onboardingData[currentPage].description}
+          </Text>
 
-        <View style={styles.indicatorContainer}>
-          {onboardingData.map((_, index) => (
-            <View 
-              key={index} 
-              style={[
-                styles.indicator, 
-                { backgroundColor: currentPage === index ? theme.colors.secondary : theme.colors.border }
-              ]} 
-            />
-          ))}
-        </View>
+          <View style={styles.indicatorContainer}>
+            {onboardingData.map((_, index) => (
+              <View 
+                key={index} 
+                style={[
+                  styles.indicator, 
+                  { backgroundColor: currentPage === index ? theme.colors.secondary : theme.colors.border }
+                ]} 
+              />
+            ))}
+          </View>
 
-        <View style={styles.buttonContainer}>
-          {currentPage > 0 ? (
-            <TouchableOpacity 
-              style={[styles.button, styles.secondaryButton]} 
-              onPress={prevPage}
-            >
-              <Text style={[styles.buttonText, { color: theme.colors.text }]}>Previous</Text>
-            </TouchableOpacity>
-          ) : <View style={{ flex: 1 }} />}
-
-          {currentPage < onboardingData.length - 1 ? (
-            <TouchableOpacity 
-              style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]} 
-              onPress={nextPage}
-            >
-              <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Next</Text>
-            </TouchableOpacity>
-          ) : (
-            <Link href="/signup" asChild>
+          <View style={styles.buttonContainer}>
+            {currentPage > 0 ? (
               <TouchableOpacity 
-                style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]}
+                style={[styles.button, styles.secondaryButton]} 
+                onPress={prevPage}
               >
-                <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Get Started</Text>
+                <Text style={[styles.buttonText, { color: theme.colors.text }]}>Previous</Text>
               </TouchableOpacity>
-            </Link>
-          )}
+            ) : <View style={{ flex: 1 }} />}
+
+            {currentPage < onboardingData.length - 1 ? (
+              <TouchableOpacity 
+                style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]} 
+                onPress={nextPage}
+              >
+                <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Next</Text>
+              </TouchableOpacity>
+            ) : (
+              <Link href="/signup" asChild>
+                <TouchableOpacity 
+                  style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]}
+                >
+                  <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Get Started</Text>
+                </TouchableOpacity>
+              </Link>
+            )}
+          </View>
         </View>
       </View>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  image: {
     width: '100%',
     height: '100%',
-    maxHeight: 300,
+  },
+  spacer: {
+    flex: 1,
   },
   contentContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  textContainer: {
     backgroundColor: 'rgba(0,0,0,0.7)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
