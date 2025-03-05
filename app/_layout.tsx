@@ -14,12 +14,11 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // Using system fonts since custom fonts aren't available yet
+  // Load custom fonts
   const [loaded, error] = useFonts({
-    // Using system fonts temporarily until custom fonts are added
-    'Montserrat-Bold': require('expo-font/build/FontLoader').System,
-    'Montserrat-Medium': require('expo-font/build/FontLoader').System,
-    'Montserrat-Regular': require('expo-font/build/FontLoader').System,
+    'Montserrat-Bold': require('../assets/fonts/Montserrat-Bold.ttf'),
+    'Montserrat-Medium': require('../assets/fonts/Montserrat-Medium.ttf'),
+    'Montserrat-Regular': require('../assets/fonts/Montserrat-Regular.ttf'),
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
