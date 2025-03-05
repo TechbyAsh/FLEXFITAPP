@@ -37,11 +37,27 @@ const theme: ThemeType = {
     secondary: '#D4AF37', // Gold
     text: '#FFFFFF',
     background: '#121212',
-    border: '#333333',
+    border: 'rgba(255, 255, 255, 0.1)',
     success: '#4CAF50',
     error: '#F44336',
-    card: '#1E1E1E',
+    card: 'rgba(30, 30, 30, 0.75)',
     overlay: 'rgba(0,0,0,0.7)',
+    gradients: {
+      primary: ['#121212', '#1E1E1E'],
+      secondary: ['#D4AF37', '#F0C75E'],
+      dark: ['#000000', '#121212'],
+      card: ['rgba(30, 30, 30, 0.85)', 'rgba(20, 20, 20, 0.75)'],
+    },
+    glass: {
+      background: 'rgba(30, 30, 30, 0.25)',
+      border: 'rgba(255, 255, 255, 0.1)',
+      highlight: 'rgba(255, 255, 255, 0.05)',
+      shadow: 'rgba(0, 0, 0, 0.5)',
+    },
+    neomorphism: {
+      lightShadow: 'rgba(40, 40, 40, 0.5)',
+      darkShadow: 'rgba(0, 0, 0, 0.6)',
+    }
   },
   typography: {
     fontFamily: {

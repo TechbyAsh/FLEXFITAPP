@@ -42,6 +42,11 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <LinearGradient 
+        colors={theme.colors.gradients.dark}
+        style={styles.backgroundGradient}
+      />
+      
       <View style={styles.header}>
         <Text style={[styles.welcomeText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
           Welcome back!
@@ -50,123 +55,177 @@ export default function DashboardScreen() {
           style={styles.notificationButton}
           onPress={() => {}}
         >
-          <Ionicons name="notifications" size={24} color={theme.colors.secondary} />
+          <View style={styles.notificationBadge}>
+            <Ionicons name="notifications" size={24} color={theme.colors.secondary} />
+          </View>
         </TouchableOpacity>
       </View>
 
       {/* Weekly Progress */}
-      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-        <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          Weekly Progress
-        </Text>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressOuter}>
-            <View 
-              style={[
-                styles.progressInner, 
-                { 
-                  width: `${progress * 100}%`,
-                  backgroundColor: theme.colors.secondary 
-                }
-              ]} 
-            />
+      <View style={styles.cardWrapper}>
+        <View style={[styles.card, styles.glassCard]}>
+          <LinearGradient
+            colors={theme.colors.gradients.card}
+            style={styles.cardGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+          <View style={styles.cardContent}>
+            <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+              Weekly Progress
+            </Text>
+            <View style={styles.progressContainer}>
+              <View style={styles.progressOuter}>
+                <LinearGradient
+                  colors={theme.colors.gradients.secondary}
+                  style={[styles.progressInner, { width: `${progress * 100}%` }]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                />
+              </View>
+              <Text style={[styles.progressText, { color: theme.colors.text }]}>{Math.round(progress * 100)}%</Text>
+            </View>
           </View>
-          <Text style={[styles.progressText, { color: theme.colors.text }]}>{Math.round(progress * 100)}%</Text>
         </View>
       </View>
 
       {/* Today's Workout */}
-      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-        <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          Today's Workout
-        </Text>
-        <View style={styles.workoutCard}>
-          <View style={styles.workoutInfo}>
-            <Text style={[styles.workoutTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-              {todaysWorkout.title}
+      <View style={styles.cardWrapper}>
+        <View style={[styles.card, styles.glassCard]}>
+          <LinearGradient
+            colors={theme.colors.gradients.card}
+            style={styles.cardGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+          <View style={styles.cardContent}>
+            <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+              Today's Workout
             </Text>
-            <View style={styles.workoutMeta}>
-              <View style={styles.metaItem}>
-                <Ionicons name="time-outline" size={16} color={theme.colors.text} />
-                <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.timeMinutes} min</Text>
+            <View style={styles.workoutCard}>
+              <View style={styles.workoutInfo}>
+                <Text style={[styles.workoutTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                  {todaysWorkout.title}
+                </Text>
+                <View style={styles.workoutMeta}>
+                  <View style={styles.metaItem}>
+                    <Ionicons name="time-outline" size={16} color={theme.colors.text} />
+                    <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.timeMinutes} min</Text>
+                  </View>
+                  <View style={styles.metaItem}>
+                    <Ionicons name="barbell-outline" size={16} color={theme.colors.text} />
+                    <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.exercises} exercises</Text>
+                  </View>
+                </View>
               </View>
-              <View style={styles.metaItem}>
-                <Ionicons name="barbell-outline" size={16} color={theme.colors.text} />
-                <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.exercises} exercises</Text>
-              </View>
+              <TouchableOpacity 
+                style={styles.startButtonWrapper}
+                onPress={() => router.push('/workout-details')}
+              >
+                <LinearGradient
+                  colors={theme.colors.gradients.secondary}
+                  style={styles.startButton}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={[styles.startButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
+                    Start
+                  </Text>
+                </LinearGradient>
+              </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity 
-            style={[styles.startButton, { backgroundColor: theme.colors.secondary }]}
-            onPress={() => router.push('/workout-details')}
-          >
-            <Text style={[styles.startButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
-              Start
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
 
       {/* Stats */}
       <View style={styles.statsContainer}>
         {stats.map((stat, index) => (
-          <View 
-            key={index} 
-            style={[styles.statCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
-          >
-            <Ionicons name={stat.icon} size={28} color={theme.colors.secondary} />
-            <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-              {stat.value}
-            </Text>
-            <Text style={[styles.statLabel, { color: theme.colors.text }]}>
-              {stat.label}
-            </Text>
+          <View key={index} style={styles.statCardWrapper}>
+            <View style={styles.statCard}>
+              <View style={styles.statCardInner}>
+                <View style={styles.iconCircle}>
+                  <LinearGradient
+                    colors={theme.colors.gradients.secondary}
+                    style={styles.iconGradient}
+                  >
+                    <Ionicons name={stat.icon} size={22} color={theme.colors.primary} />
+                  </LinearGradient>
+                </View>
+                <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                  {stat.value}
+                </Text>
+                <Text style={[styles.statLabel, { color: theme.colors.text }]}>
+                  {stat.label}
+                </Text>
+              </View>
+            </View>
           </View>
         ))}
       </View>
 
       {/* Upcoming Sessions */}
-      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
-        <View style={styles.sectionHeader}>
-          <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-            Upcoming Sessions
-          </Text>
-          <TouchableOpacity onPress={() => router.push('/schedule')}>
-            <Text style={[styles.viewAllText, { color: theme.colors.secondary }]}>View All</Text>
-          </TouchableOpacity>
-        </View>
-        {upcomingSessions.map((session) => (
-          <TouchableOpacity 
-            key={session.id}
-            style={[styles.sessionCard, { borderColor: theme.colors.border }]}
-          >
-            <View style={styles.sessionInfo}>
-              <Text style={[styles.sessionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-                {session.title}
+      <View style={styles.cardWrapper}>
+        <View style={[styles.card, styles.glassCard]}>
+          <LinearGradient
+            colors={theme.colors.gradients.card}
+            style={styles.cardGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+          <View style={styles.cardContent}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                Upcoming Sessions
               </Text>
-              <View style={styles.sessionDetail}>
-                <Ionicons name="calendar-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
-                <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.day}</Text>
-              </View>
-              <View style={styles.sessionDetail}>
-                <Ionicons name="time-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
-                <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.time}</Text>
-              </View>
+              <TouchableOpacity onPress={() => router.push('/schedule')}>
+                <Text style={[styles.viewAllText, { color: theme.colors.secondary }]}>View All</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.sessionType}>
-              {session.withTrainer && (
-                <View style={[styles.badge, { backgroundColor: theme.colors.secondary }]}>
-                  <Text style={[styles.badgeText, { color: theme.colors.primary }]}>Trainer</Text>
+            
+            {upcomingSessions.map((session) => (
+              <TouchableOpacity 
+                key={session.id}
+                style={styles.sessionCard}
+              >
+                <View style={styles.sessionCardBg}>
+                  <View style={styles.sessionContent}>
+                    <View style={styles.sessionInfo}>
+                      <Text style={[styles.sessionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                        {session.title}
+                      </Text>
+                      <View style={styles.sessionDetail}>
+                        <Ionicons name="calendar-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
+                        <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.day}</Text>
+                      </View>
+                      <View style={styles.sessionDetail}>
+                        <Ionicons name="time-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
+                        <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.time}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.sessionType}>
+                      {session.withTrainer && (
+                        <LinearGradient
+                          colors={theme.colors.gradients.secondary}
+                          style={styles.badgeGradient}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                        >
+                          <Text style={[styles.badgeText, { color: theme.colors.primary }]}>Trainer</Text>
+                        </LinearGradient>
+                      )}
+                      {session.virtual && (
+                        <View style={[styles.badge, { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+                          <Text style={[styles.badgeText, { color: theme.colors.text }]}>Virtual</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
                 </View>
-              )}
-              {session.virtual && (
-                <View style={[styles.badge, { backgroundColor: theme.colors.background }]}>
-                  <Text style={[styles.badgeText, { color: theme.colors.text }]}>Virtual</Text>
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
-        ))}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -177,6 +236,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#121212',
   },
+  backgroundGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -186,21 +252,49 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   welcomeText: {
-    fontSize: 24,
+    fontSize: 28,
+    letterSpacing: 0.5,
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
   },
   notificationButton: {
     padding: 8,
   },
-  card: {
-    borderRadius: 12,
-    padding: 16,
+  notificationBadge: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  cardWrapper: {
     marginHorizontal: 20,
     marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  card: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  glassCard: {
+    backgroundColor: 'transparent',
     borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  cardGradient: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.9,
+  },
+  cardContent: {
+    padding: 16,
   },
   cardTitle: {
     fontSize: 18,
     marginBottom: 12,
+    letterSpacing: 0.5,
   },
   progressContainer: {
     flexDirection: 'row',
@@ -209,7 +303,7 @@ const styles = StyleSheet.create({
   progressOuter: {
     flex: 1,
     height: 12,
-    backgroundColor: '#2A2A2A',
+    backgroundColor: 'rgba(255,255,255,0.1)',
     borderRadius: 6,
     marginRight: 10,
     overflow: 'hidden',
@@ -247,9 +341,13 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 12,
   },
+  startButtonWrapper: {
+    overflow: 'hidden',
+    borderRadius: 20,
+  },
   startButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 20,
   },
   startButtonText: {
@@ -261,22 +359,52 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 16,
   },
-  statCard: {
+  statCardWrapper: {
     flex: 1,
+    marginHorizontal: 4,
+  },
+  statCard: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 2,
+    backgroundColor: '#1e1e1e',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
+  },
+  statCardInner: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
     padding: 16,
-    marginHorizontal: 4,
+    borderRadius: 14,
+    backgroundColor: '#191919',
     borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  iconGradient: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   statValue: {
     fontSize: 18,
-    marginTop: 8,
+    marginTop: 4,
+    letterSpacing: 0.5,
   },
   statLabel: {
     fontSize: 12,
     marginTop: 4,
+    opacity: 0.7,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -288,11 +416,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   sessionCard: {
+    marginBottom: 12,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  sessionCardBg: {
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    backgroundColor: 'rgba(30,30,30,0.5)',
+  },
+  sessionContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    padding: 14,
   },
   sessionInfo: {
     flex: 1,
@@ -316,6 +454,14 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   badge: {
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginBottom: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  badgeGradient: {
     borderRadius: 12,
     paddingVertical: 4,
     paddingHorizontal: 8,

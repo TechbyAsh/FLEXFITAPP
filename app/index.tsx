@@ -42,57 +42,83 @@ export default function OnboardingScreen() {
       resizeMode="cover"
     >
       <StatusBar style="light" />
-
+      <LinearGradient
+        colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']}
+        style={styles.overlay}
+      />
       <View style={styles.contentContainer}>
         <View style={styles.spacer} />
         
         <View style={styles.textContainer}>
-          <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
-            {onboardingData[currentPage].title}
-          </Text>
+          <LinearGradient
+            colors={theme.colors.gradients.card}
+            style={styles.glassBg}
+          />
+          
+          <View style={styles.glassContent}>
+            <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
+              {onboardingData[currentPage].title}
+            </Text>
 
-          <Text style={[styles.description, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
-            {onboardingData[currentPage].description}
-          </Text>
+            <Text style={[styles.description, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
+              {onboardingData[currentPage].description}
+            </Text>
 
-          <View style={styles.indicatorContainer}>
-            {onboardingData.map((_, index) => (
-              <View 
-                key={index} 
-                style={[
-                  styles.indicator, 
-                  { backgroundColor: currentPage === index ? theme.colors.secondary : theme.colors.border }
-                ]} 
-              />
-            ))}
-          </View>
+            <View style={styles.indicatorContainer}>
+              {onboardingData.map((_, index) => (
+                <View 
+                  key={index} 
+                  style={[
+                    styles.indicator, 
+                    { 
+                      backgroundColor: currentPage === index 
+                        ? theme.colors.secondary 
+                        : 'rgba(255,255,255,0.2)' 
+                    }
+                  ]} 
+                />
+              ))}
+            </View>
 
-          <View style={styles.buttonContainer}>
-            {currentPage > 0 ? (
-              <TouchableOpacity 
-                style={[styles.button, styles.secondaryButton]} 
-                onPress={prevPage}
-              >
-                <Text style={[styles.buttonText, { color: theme.colors.text }]}>Previous</Text>
-              </TouchableOpacity>
-            ) : <View style={{ flex: 1 }} />}
-
-            {currentPage < onboardingData.length - 1 ? (
-              <TouchableOpacity 
-                style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]} 
-                onPress={nextPage}
-              >
-                <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Next</Text>
-              </TouchableOpacity>
-            ) : (
-              <Link href="/signup" asChild>
+            <View style={styles.buttonContainer}>
+              {currentPage > 0 ? (
                 <TouchableOpacity 
-                  style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]}
+                  style={[styles.button, styles.secondaryButton]} 
+                  onPress={prevPage}
                 >
-                  <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Get Started</Text>
+                  <Text style={[styles.buttonText, { color: theme.colors.text }]}>Previous</Text>
                 </TouchableOpacity>
-              </Link>
-            )}
+              ) : <View style={{ flex: 1 }} />}
+
+              {currentPage < onboardingData.length - 1 ? (
+                <TouchableOpacity 
+                  style={styles.button}
+                  onPress={nextPage}
+                >
+                  <LinearGradient
+                    colors={theme.colors.gradients.secondary}
+                    style={styles.gradientButton}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                  >
+                    <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Next</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              ) : (
+                <Link href="/signup" asChild>
+                  <TouchableOpacity style={styles.button}>
+                    <LinearGradient
+                      colors={theme.colors.gradients.secondary}
+                      style={styles.gradientButton}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                    >
+                      <Text style={[styles.buttonText, { color: theme.colors.primary }]}>Get Started</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </Link>
+              )}
+            </View>
           </View>
         </View>
       </View>
@@ -106,6 +132,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
   spacer: {
     flex: 1,
   },
@@ -114,22 +143,47 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
-    backgroundColor: 'rgba(0,0,0,0.7)',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 24,
     paddingBottom: 48,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  glassBg: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    opacity: 0.9,
+  },
+  glassContent: {
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 30,
+    padding: 20,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
   },
   title: {
     fontSize: 28,
     marginBottom: 12,
     textAlign: 'center',
+    textShadowColor: 'rgba(0,0,0,0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 5,
   },
   description: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
+    opacity: 0.9,
   },
   indicatorContainer: {
     flexDirection: 'row',
@@ -148,21 +202,23 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    padding: 16,
-    borderRadius: 12,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 8,
+    overflow: 'hidden',
   },
-  primaryButton: {
-    shadowColor: '#D4AF37',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 5,
+  gradientButton: {
+    width: '100%',
+    height: '100%',
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   secondaryButton: {
     backgroundColor: 'rgba(255,255,255,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)',
   },
   buttonText: {
     fontSize: 16,
