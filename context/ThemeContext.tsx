@@ -50,7 +50,7 @@ type ThemeType = {
 const theme: ThemeType = {
   colors: {
     primary: '#0D1117',
-    secondary: '#00E6CC',
+    secondary: '#4ADE80', // Bright green
     text: '#FFFFFF',
     background: '#0D1117',
     border: '#252A33',
@@ -59,8 +59,8 @@ const theme: ThemeType = {
     card: '#161B22',
     overlay: 'rgba(0,0,0,0.7)',
     gradients: {
-      primary: ['#00E6CC', '#00A3CC'],
-      secondary: ['#00E6CC', '#00A3CC'],
+      primary: ['#4ADE80', '#22C55E'], // Bright green to emerald
+      secondary: ['#4ADE80', '#22C55E'], // Bright green to emerald
       dark: ['#0D1117', '#161B22'],
       card: ['rgba(22,27,34,0.9)', 'rgba(13,17,23,0.9)'],
     },
