@@ -12,8 +12,8 @@ export default function ProfileScreen() {
   
   // Mock user data
   const user = {
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
+    name: 'Ashley Johnson',
+    email: 'Ash.johnson@example.com',
     memberSince: 'January 2023',
     plan: 'Premium',
     stats: {
