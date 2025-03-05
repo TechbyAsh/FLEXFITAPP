@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { Link } from 'expo-router';
@@ -9,31 +8,31 @@ import { LinearGradient } from 'expo-linear-gradient';
 export default function OnboardingScreen() {
   const theme = useTheme();
   const [currentPage, setCurrentPage] = useState(0);
-  
+
   const onboardingData = [
     {
       title: "Welcome to FitElite",
       description: "Your personal fitness journey begins here.",
-      image: require('../assets/images/onboarding-1.png')
+      // image: require('../assets/images/onboarding-1.png')
     },
     {
       title: "Personalized Workouts",
       description: "Get customized 6-week plans tailored to your goals.",
-      image: require('../assets/images/onboarding-2.png')
+      // image: require('../assets/images/onboarding-2.png')
     },
     {
       title: "Nutrition & Mindset",
       description: "Complete guidance for both body and mind.",
-      image: require('../assets/images/onboarding-3.png')
+      // image: require('../assets/images/onboarding-3.png')
     }
   ];
-  
+
   const nextPage = () => {
     if (currentPage < onboardingData.length - 1) {
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -46,24 +45,23 @@ export default function OnboardingScreen() {
       style={styles.container}
     >
       <StatusBar style="light" />
-      
+
       <View style={styles.imageContainer}>
-        <Image 
-          source={onboardingData[currentPage].image} 
-          style={styles.image}
-          resizeMode="contain"
-        />
+        {/*  Image component removed */}
+        <View style={{backgroundColor: theme.colors.secondary, width: '100%', height: 300, justifyContent: 'center', alignItems: 'center'}}>
+          <Text style={{color: theme.colors.primary, fontSize: 24}}>Placeholder Image</Text>
+        </View>
       </View>
-      
+
       <View style={styles.contentContainer}>
         <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
           {onboardingData[currentPage].title}
         </Text>
-        
+
         <Text style={[styles.description, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
           {onboardingData[currentPage].description}
         </Text>
-        
+
         <View style={styles.indicatorContainer}>
           {onboardingData.map((_, index) => (
             <View 
@@ -75,7 +73,7 @@ export default function OnboardingScreen() {
             />
           ))}
         </View>
-        
+
         <View style={styles.buttonContainer}>
           {currentPage > 0 ? (
             <TouchableOpacity 
@@ -85,7 +83,7 @@ export default function OnboardingScreen() {
               <Text style={[styles.buttonText, { color: theme.colors.text }]}>Previous</Text>
             </TouchableOpacity>
           ) : <View style={{ flex: 1 }} />}
-          
+
           {currentPage < onboardingData.length - 1 ? (
             <TouchableOpacity 
               style={[styles.button, styles.primaryButton, { backgroundColor: theme.colors.secondary }]} 
