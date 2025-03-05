@@ -26,185 +26,189 @@ export default function WorkoutsScreen() {
       title: 'HIIT Cardio Blast', 
       duration: '30 min', 
       level: 'Intermediate',
-      thumbnail: null, // Placeholder
+      thumbnail: null, // Placeholder image
     },
     { 
       id: 2, 
       title: 'Core Strength', 
       duration: '25 min', 
       level: 'Beginner',
-      thumbnail: null, // Placeholder
+      thumbnail: null, // Placeholder image
     },
     { 
       id: 3, 
       title: 'Full Body Power', 
       duration: '45 min', 
       level: 'Advanced',
-      thumbnail: null, // Placeholder
+      thumbnail: null, // Placeholder image
     },
   ];
 
-  const renderDay = ({ item }) => (
-    <TouchableOpacity 
-      style={[
-        styles.dayCard, 
-        { 
-          backgroundColor: theme.colors.surface, 
-          borderColor: item.completed ? theme.colors.secondary : theme.colors.border,
-          opacity: item.isRest ? 0.7 : 1,
-        }
-      ]}
-      onPress={() => router.push('/workout-details')}
-      disabled={item.isRest}
-    >
-      <View style={styles.dayHeader}>
-        <Text style={[styles.dayText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.medium }]}>
-          {item.day}
-        </Text>
-        {item.completed && (
-          <View style={[styles.completedBadge, { backgroundColor: theme.colors.secondary }]}>
-            <Ionicons name="checkmark" size={12} color={theme.colors.primary} />
-          </View>
-        )}
-      </View>
-      
-      <Text style={[styles.workoutDayTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-        {item.title}
-      </Text>
-      
-      {!item.isRest && (
-        <View style={styles.workoutActions}>
-          <TouchableOpacity 
-            style={[styles.actionButton, { backgroundColor: item.completed ? 'rgba(212, 175, 55, 0.2)' : theme.colors.secondary }]}
-            disabled={item.completed}
-          >
-            <Text 
-              style={[
-                styles.actionButtonText, 
-                { 
-                  color: item.completed ? theme.colors.textSecondary : theme.colors.primary,
-                  fontFamily: theme.typography.fontFamily.medium,
-                }
-              ]}
-            >
-              {item.completed ? 'Completed' : 'Start'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={styles.container}>
       {/* Tabs */}
       <View style={[styles.tabContainer, { borderBottomColor: theme.colors.border }]}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
-            styles.tab, 
+            styles.tab,
             activeTab === 'week' && [styles.activeTab, { borderBottomColor: theme.colors.secondary }]
           ]}
           onPress={() => setActiveTab('week')}
         >
-          <Text 
-            style={[
-              styles.tabText, 
-              { 
-                color: activeTab === 'week' ? theme.colors.secondary : theme.colors.textSecondary,
-                fontFamily: theme.typography.fontFamily.medium,
-              }
-            ]}
-          >
-            This Week
-          </Text>
+          <Text style={[
+            styles.tabText, 
+            { 
+              color: activeTab === 'week' ? theme.colors.secondary : theme.colors.text,
+              fontFamily: theme.typography.fontFamily.medium
+            }
+          ]}>Week Plan</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
-            styles.tab, 
+            styles.tab,
             activeTab === 'library' && [styles.activeTab, { borderBottomColor: theme.colors.secondary }]
           ]}
           onPress={() => setActiveTab('library')}
         >
-          <Text 
-            style={[
-              styles.tabText, 
-              { 
-                color: activeTab === 'library' ? theme.colors.secondary : theme.colors.textSecondary,
-                fontFamily: theme.typography.fontFamily.medium,
-              }
-            ]}
-          >
-            Library
-          </Text>
+          <Text style={[
+            styles.tabText, 
+            { 
+              color: activeTab === 'library' ? theme.colors.secondary : theme.colors.text,
+              fontFamily: theme.typography.fontFamily.medium
+            }
+          ]}>Workout Library</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[
-            styles.tab, 
+            styles.tab,
             activeTab === 'history' && [styles.activeTab, { borderBottomColor: theme.colors.secondary }]
           ]}
           onPress={() => setActiveTab('history')}
         >
-          <Text 
-            style={[
-              styles.tabText, 
-              { 
-                color: activeTab === 'history' ? theme.colors.secondary : theme.colors.textSecondary,
-                fontFamily: theme.typography.fontFamily.medium,
-              }
-            ]}
-          >
-            History
-          </Text>
+          <Text style={[
+            styles.tabText, 
+            { 
+              color: activeTab === 'history' ? theme.colors.secondary : theme.colors.text,
+              fontFamily: theme.typography.fontFamily.medium
+            }
+          ]}>History</Text>
         </TouchableOpacity>
       </View>
-      
+
+      {/* Content based on active tab */}
       {activeTab === 'week' && (
-        <FlatList
-          data={weekPlan}
-          renderItem={renderDay}
-          keyExtractor={item => item.id.toString()}
-          contentContainerStyle={styles.listContainer}
-        />
+        <ScrollView style={styles.listContainer}>
+          {weekPlan.map((day) => (
+            <View 
+              key={day.id}
+              style={[
+                styles.dayCard, 
+                { 
+                  backgroundColor: theme.colors.card,
+                  borderColor: theme.colors.border
+                }
+              ]}
+            >
+              <View style={styles.dayHeader}>
+                <Text style={[styles.dayText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.medium }]}>
+                  {day.day}
+                </Text>
+                {day.completed && (
+                  <View style={[styles.completedBadge, { backgroundColor: theme.colors.success }]}>
+                    <Ionicons name="checkmark" size={14} color="white" />
+                  </View>
+                )}
+              </View>
+              <Text 
+                style={[
+                  styles.workoutDayTitle, 
+                  { 
+                    color: day.isRest ? theme.colors.text : theme.colors.secondary,
+                    fontFamily: theme.typography.fontFamily.bold
+                  }
+                ]}
+              >
+                {day.title}
+              </Text>
+              {!day.isRest && !day.completed && (
+                <View style={styles.workoutActions}>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, { backgroundColor: theme.colors.secondary }]}
+                    onPress={() => router.push('/workout-details')}
+                  >
+                    <Text style={[
+                      styles.actionButtonText, 
+                      { 
+                        color: theme.colors.primary,
+                        fontFamily: theme.typography.fontFamily.bold
+                      }
+                    ]}>
+                      Start Workout
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ))}
+        </ScrollView>
       )}
-      
+
       {activeTab === 'library' && (
-        <ScrollView contentContainerStyle={styles.libraryContainer}>
+        <ScrollView style={styles.libraryContainer}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+            <Text style={[
+              styles.sectionTitle, 
+              { 
+                color: theme.colors.text,
+                fontFamily: theme.typography.fontFamily.bold
+              }
+            ]}>
               Video Workouts
             </Text>
           </View>
-          
-          {videoWorkouts.map(workout => (
+
+          {videoWorkouts.map((workout) => (
             <TouchableOpacity 
               key={workout.id}
-              style={[styles.videoCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
+              style={[styles.videoCard, { borderColor: theme.colors.border }]}
               onPress={() => router.push('/workout-video')}
             >
-              <View style={[styles.videoThumbnail, {backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
-                <Text style={{color: '#fff', fontSize: 14}}>Workout Thumbnail</Text>
-              </View>
-              <View style={styles.playOverlay}>
-                <View style={[styles.playButton, { backgroundColor: 'rgba(0,0,0,0.6)' }]}>
-                  <Ionicons name="play" size={24} color={theme.colors.secondary} />
+              <View style={styles.videoThumbnail}>
+                {/* Placeholder for video thumbnail */}
+                <View style={{
+                  backgroundColor: theme.colors.card, 
+                  width: '100%', 
+                  height: '100%', 
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <Ionicons name="videocam" size={40} color={theme.colors.secondary} />
+                </View>
+                <View style={styles.playOverlay}>
+                  <View style={[styles.playButton, { backgroundColor: theme.colors.secondary }]}>
+                    <Ionicons name="play" size={24} color={theme.colors.primary} />
+                  </View>
                 </View>
               </View>
-              <View style={styles.videoInfo}>
-                <Text style={[styles.videoTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+              <View style={[styles.videoInfo, { backgroundColor: theme.colors.card }]}>
+                <Text style={[
+                  styles.videoTitle, 
+                  { 
+                    color: theme.colors.text,
+                    fontFamily: theme.typography.fontFamily.bold
+                  }
+                ]}>
                   {workout.title}
                 </Text>
                 <View style={styles.videoMeta}>
-                  <View style={styles.videoMetaItem}>
-                    <Ionicons name="time-outline" size={14} color={theme.colors.textSecondary} />
-                    <Text style={[styles.videoMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
+                  <View style={styles.metaItem}>
+                    <Ionicons name="time-outline" size={14} color={theme.colors.text} />
+                    <Text style={[styles.metaText, { color: theme.colors.text }]}>
                       {workout.duration}
                     </Text>
                   </View>
-                  <View style={styles.videoMetaItem}>
-                    <Ionicons name="fitness-outline" size={14} color={theme.colors.textSecondary} />
-                    <Text style={[styles.videoMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
+                  <View style={styles.metaBadge}>
+                    <Text style={[styles.metaBadgeText, { color: theme.colors.secondary }]}>
                       {workout.level}
                     </Text>
                   </View>
@@ -212,34 +216,61 @@ export default function WorkoutsScreen() {
               </View>
             </TouchableOpacity>
           ))}
-          
+
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-              Workout Categories
+            <Text style={[
+              styles.sectionTitle, 
+              { 
+                color: theme.colors.text,
+                fontFamily: theme.typography.fontFamily.bold
+              }
+            ]}>
+              Custom Workouts
             </Text>
           </View>
-          
-          <View style={styles.categoriesContainer}>
-            {['Strength', 'Cardio', 'Flexibility', 'HIIT', 'Recovery', 'Core'].map((category, index) => (
-              <TouchableOpacity 
-                key={index}
-                style={[styles.categoryCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-              >
-                <Text style={[styles.categoryText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.medium }]}>
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+
+          <TouchableOpacity 
+            style={[styles.createButton, { borderColor: theme.colors.secondary }]}
+            onPress={() => router.push('/create-workout')}
+          >
+            <Ionicons name="add-circle-outline" size={24} color={theme.colors.secondary} />
+            <Text style={[
+              styles.createButtonText, 
+              { 
+                color: theme.colors.secondary,
+                fontFamily: theme.typography.fontFamily.medium
+              }
+            ]}>
+              Create New Workout
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       )}
-      
+
       {activeTab === 'history' && (
-        <ScrollView contentContainerStyle={styles.historyContainer}>
-          <Text style={[styles.emptyText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-            Your workout history will be displayed here
+        <View style={styles.historyContainer}>
+          <Ionicons name="fitness-outline" size={60} color={theme.colors.secondary} />
+          <Text style={[styles.emptyText, { color: theme.colors.text, marginTop: 20 }]}>
+            No workout history yet
           </Text>
-        </ScrollView>
+          <Text style={[styles.subText, { color: theme.colors.text, marginTop: 8 }]}>
+            Complete workouts to see your history
+          </Text>
+          <TouchableOpacity 
+            style={[styles.startHistoryButton, { backgroundColor: theme.colors.secondary, marginTop: 24 }]}
+            onPress={() => setActiveTab('week')}
+          >
+            <Text style={[
+              styles.startHistoryButtonText, 
+              { 
+                color: theme.colors.primary,
+                fontFamily: theme.typography.fontFamily.bold
+              }
+            ]}>
+              Start a Workout
+            </Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -332,13 +363,10 @@ const styles = StyleSheet.create({
   videoThumbnail: {
     width: '100%',
     height: 160,
+    position: 'relative',
   },
   playOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 160,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -358,35 +386,53 @@ const styles = StyleSheet.create({
   },
   videoMeta: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  videoMetaItem: {
+  metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 16,
   },
-  videoMetaText: {
+  metaText: {
     fontSize: 12,
     marginLeft: 4,
   },
-  categoriesContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  metaBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
   },
-  categoryCard: {
-    width: '48%',
-    height: 80,
-    borderRadius: 12,
+  metaBadgeText: {
+    fontSize: 12,
+  },
+  createButton: {
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    padding: 16,
+    borderRadius: 12,
     borderWidth: 1,
+    borderStyle: 'dashed',
   },
-  categoryText: {
+  createButtonText: {
     fontSize: 16,
+    marginLeft: 8,
   },
   emptyText: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
+  },
+  subText: {
+    fontSize: 14,
+    textAlign: 'center',
+    opacity: 0.7,
+  },
+  startHistoryButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 24,
+  },
+  startHistoryButtonText: {
+    fontSize: 16,
   },
 });

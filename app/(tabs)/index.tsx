@@ -41,213 +41,132 @@ export default function DashboardScreen() {
   ];
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.colors.background }]}
-      contentContainerStyle={styles.contentContainer}
-    >
-      {/* User welcome section */}
-      <View style={styles.welcomeSection}>
-        <View>
-          <Text style={[styles.welcomeText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
-            Welcome back,
-          </Text>
-          <Text style={[styles.userName, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
-            Alex
-          </Text>
-        </View>
-        <TouchableOpacity
-          style={[styles.profileButton, { backgroundColor: theme.colors.surface }]}
-          onPress={() => router.push('/profile')}
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={[styles.welcomeText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+          Welcome back!
+        </Text>
+        <TouchableOpacity 
+          style={styles.notificationButton}
+          onPress={() => {}}
         >
-          <View 
-            style={[
-              styles.profileImage, 
-              { 
-                backgroundColor: theme.colors.border,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }
-            ]} 
-          >
-            <Text style={{ color: theme.colors.text, fontSize: 18, fontWeight: 'bold' }}>
-              ME
-            </Text>
-          </View>
+          <Ionicons name="notifications" size={24} color={theme.colors.secondary} />
         </TouchableOpacity>
       </View>
 
-      {/* Progress card */}
-      <LinearGradient
-        colors={['#000000', '#222222']}
-        style={[styles.progressCard, { borderColor: theme.colors.border }]}
-      >
-        <View style={styles.progressHeader}>
-          <Text style={[styles.progressTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.medium }]}>
-            Weekly Progress
-          </Text>
-          <TouchableOpacity>
-            <Text style={[styles.viewDetailsText, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.medium }]}>
-              View Details
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.progressBarContainer}>
-          <View style={[styles.progressBar, { backgroundColor: theme.colors.border }]}>
+      {/* Weekly Progress */}
+      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+        <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+          Weekly Progress
+        </Text>
+        <View style={styles.progressContainer}>
+          <View style={styles.progressOuter}>
             <View 
               style={[
-                styles.progressFill, 
-                { width: `${progress * 100}%`, backgroundColor: theme.colors.secondary }
+                styles.progressInner, 
+                { 
+                  width: `${progress * 100}%`,
+                  backgroundColor: theme.colors.secondary 
+                }
               ]} 
             />
           </View>
-          <Text style={[styles.progressText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-            {`${Math.round(progress * 100)}%`}
-          </Text>
+          <Text style={[styles.progressText, { color: theme.colors.text }]}>{Math.round(progress * 100)}%</Text>
         </View>
+      </View>
 
-        <View style={styles.statsContainer}>
-          {stats.map((stat, index) => (
-            <View key={index} style={styles.statItem}>
-              <View style={[styles.statIconContainer, { backgroundColor: 'rgba(212, 175, 55, 0.1)' }]}>
-                <Ionicons name={stat.icon} size={20} color={theme.colors.secondary} />
-              </View>
-              <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-                {stat.value}
-              </Text>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-                {stat.label}
-              </Text>
-            </View>
-          ))}
-        </View>
-      </LinearGradient>
-
-      {/* Today's workout */}
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+      {/* Today's Workout */}
+      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+        <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
           Today's Workout
         </Text>
-        <TouchableOpacity onPress={() => router.push('/workouts')}>
-          <Text style={[styles.viewAllText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.medium }]}>
-            View All
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity 
-        style={[styles.workoutCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-        onPress={() => router.push('/workout-details')}
-      >
-        <View style={[styles.workoutImage, {backgroundColor: '#333', justifyContent: 'center', alignItems: 'center'}]}>
-          <Text style={{color: '#fff', fontSize: 12}}>Workout</Text>
-        </View>
-        <View style={styles.workoutInfo}>
-          <Text style={[styles.workoutTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-            {todaysWorkout.title}
-          </Text>
-          <View style={styles.workoutMeta}>
-            <View style={styles.workoutMetaItem}>
-              <Ionicons name="time-outline" size={16} color={theme.colors.textSecondary} />
-              <Text style={[styles.workoutMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-                {todaysWorkout.timeMinutes} mins
-              </Text>
-            </View>
-            <View style={styles.workoutMetaItem}>
-              <Ionicons name="fitness-outline" size={16} color={theme.colors.textSecondary} />
-              <Text style={[styles.workoutMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-                {todaysWorkout.exercises} exercises
-              </Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.workoutAction}>
-          <Ionicons name="play-circle" size={36} color={theme.colors.secondary} />
-        </View>
-      </TouchableOpacity>
-
-      {/* Upcoming sessions */}
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          Upcoming Sessions
-        </Text>
-        <TouchableOpacity onPress={() => router.push('/schedule')}>
-          <Text style={[styles.viewAllText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.medium }]}>
-            Schedule
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {upcomingSessions.map(session => (
-        <TouchableOpacity 
-          key={session.id}
-          style={[styles.sessionCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
-        >
-          <View style={[styles.sessionDay, { backgroundColor: theme.colors.primary, borderColor: theme.colors.secondary }]}>
-            <Text style={[styles.sessionDayText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.medium }]}>
-              {session.day.substring(0, 3)}
+        <View style={styles.workoutCard}>
+          <View style={styles.workoutInfo}>
+            <Text style={[styles.workoutTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+              {todaysWorkout.title}
             </Text>
-          </View>
-
-          <View style={styles.sessionInfo}>
-            <Text style={[styles.sessionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-              {session.title}
-            </Text>
-            <View style={styles.sessionMeta}>
-              <View style={styles.sessionMetaItem}>
-                <Ionicons name="time-outline" size={14} color={theme.colors.textSecondary} />
-                <Text style={[styles.sessionMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-                  {session.time}
-                </Text>
+            <View style={styles.workoutMeta}>
+              <View style={styles.metaItem}>
+                <Ionicons name="time-outline" size={16} color={theme.colors.text} />
+                <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.timeMinutes} min</Text>
               </View>
+              <View style={styles.metaItem}>
+                <Ionicons name="barbell-outline" size={16} color={theme.colors.text} />
+                <Text style={[styles.metaText, { color: theme.colors.text }]}>{todaysWorkout.exercises} exercises</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity 
+            style={[styles.startButton, { backgroundColor: theme.colors.secondary }]}
+            onPress={() => router.push('/workout-details')}
+          >
+            <Text style={[styles.startButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
+              Start
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      {/* Stats */}
+      <View style={styles.statsContainer}>
+        {stats.map((stat, index) => (
+          <View 
+            key={index} 
+            style={[styles.statCard, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}
+          >
+            <Ionicons name={stat.icon} size={28} color={theme.colors.secondary} />
+            <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+              {stat.value}
+            </Text>
+            <Text style={[styles.statLabel, { color: theme.colors.text }]}>
+              {stat.label}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      {/* Upcoming Sessions */}
+      <View style={[styles.card, { backgroundColor: theme.colors.card, borderColor: theme.colors.border }]}>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+            Upcoming Sessions
+          </Text>
+          <TouchableOpacity onPress={() => router.push('/schedule')}>
+            <Text style={[styles.viewAllText, { color: theme.colors.secondary }]}>View All</Text>
+          </TouchableOpacity>
+        </View>
+        {upcomingSessions.map((session) => (
+          <TouchableOpacity 
+            key={session.id}
+            style={[styles.sessionCard, { borderColor: theme.colors.border }]}
+          >
+            <View style={styles.sessionInfo}>
+              <Text style={[styles.sessionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                {session.title}
+              </Text>
+              <View style={styles.sessionDetail}>
+                <Ionicons name="calendar-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
+                <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.day}</Text>
+              </View>
+              <View style={styles.sessionDetail}>
+                <Ionicons name="time-outline" size={14} color={theme.colors.text} style={styles.sessionIcon} />
+                <Text style={[styles.sessionText, { color: theme.colors.text }]}>{session.time}</Text>
+              </View>
+            </View>
+            <View style={styles.sessionType}>
               {session.withTrainer && (
-                <View style={styles.sessionMetaItem}>
-                  <Ionicons name="person-outline" size={14} color={theme.colors.textSecondary} />
-                  <Text style={[styles.sessionMetaText, { color: theme.colors.textSecondary, fontFamily: theme.typography.fontFamily.regular }]}>
-                    With Trainer
-                  </Text>
+                <View style={[styles.badge, { backgroundColor: theme.colors.secondary }]}>
+                  <Text style={[styles.badgeText, { color: theme.colors.primary }]}>Trainer</Text>
                 </View>
               )}
               {session.virtual && (
-                <View style={styles.sessionVirtual}>
-                  <Ionicons name="videocam" size={14} color={theme.colors.accent1} />
-                  <Text style={[styles.sessionVirtualText, { color: theme.colors.accent1, fontFamily: theme.typography.fontFamily.medium }]}>
-                    Virtual
-                  </Text>
+                <View style={[styles.badge, { backgroundColor: theme.colors.background }]}>
+                  <Text style={[styles.badgeText, { color: theme.colors.text }]}>Virtual</Text>
                 </View>
               )}
             </View>
-          </View>
-
-          <TouchableOpacity style={[styles.joinButton, { backgroundColor: theme.colors.secondary }]}>
-            <Text style={[styles.joinButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
-              Join
-            </Text>
           </TouchableOpacity>
-        </TouchableOpacity>
-      ))}
-
-      {/* Daily mindset coaching */}
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          Today's Mindset
-        </Text>
-      </View>
-
-      <View style={[styles.mindsetCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
-        <View style={styles.quoteContainer}>
-          <Text style={[styles.quoteText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular, fontStyle: 'italic' }]}>
-            "The only person you should try to be better than is the person you were yesterday."
-          </Text>
-          <Text style={[styles.quoteAuthor, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.medium }]}>
-            - Unknown
-          </Text>
-        </View>
-        <TouchableOpacity style={[styles.mindsetButton, { backgroundColor: 'rgba(212, 175, 55, 0.1)' }]}>
-          <Text style={[styles.mindsetButtonText, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.medium }]}>
-            Read More
-          </Text>
-        </TouchableOpacity>
+        ))}
       </View>
     </ScrollView>
   );
@@ -256,161 +175,124 @@ export default function DashboardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#121212',
   },
-  contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
-  },
-  welcomeSection: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 24,
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
   },
   welcomeText: {
-    fontSize: 16,
-  },
-  userName: {
     fontSize: 24,
   },
-  profileButton: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+  notificationButton: {
+    padding: 8,
   },
-  profileImage: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-  },
-  progressCard: {
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
+  card: {
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginBottom: 16,
     borderWidth: 1,
   },
-  progressHeader: {
+  cardTitle: {
+    fontSize: 18,
+    marginBottom: 12,
+  },
+  progressContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  progressOuter: {
+    flex: 1,
+    height: 12,
+    backgroundColor: '#2A2A2A',
+    borderRadius: 6,
+    marginRight: 10,
+    overflow: 'hidden',
+  },
+  progressInner: {
+    height: '100%',
+    borderRadius: 6,
+  },
+  progressText: {
+    fontSize: 14,
+    width: 40,
+    textAlign: 'right',
+  },
+  workoutCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
   },
-  progressTitle: {
-    fontSize: 18,
+  workoutInfo: {
+    flex: 1,
   },
-  viewDetailsText: {
-    fontSize: 14,
+  workoutTitle: {
+    fontSize: 16,
+    marginBottom: 4,
   },
-  progressBarContainer: {
+  workoutMeta: {
+    flexDirection: 'row',
+  },
+  metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginRight: 12,
   },
-  progressBar: {
-    flex: 1,
-    height: 10,
-    borderRadius: 5,
-    marginRight: 10,
+  metaText: {
+    marginLeft: 4,
+    fontSize: 12,
   },
-  progressFill: {
-    height: '100%',
-    borderRadius: 5,
+  startButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
   },
-  progressText: {
-    fontSize: 16,
+  startButtonText: {
+    fontSize: 14,
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginBottom: 16,
   },
-  statItem: {
+  statCard: {
+    flex: 1,
     alignItems: 'center',
-  },
-  statIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 4,
+    borderWidth: 1,
   },
   statValue: {
-    fontSize: 16,
-    marginBottom: 4,
+    fontSize: 18,
+    marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
+    marginTop: 4,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
+    marginBottom: 12,
   },
   viewAllText: {
     fontSize: 14,
   },
-  workoutCard: {
-    flexDirection: 'row',
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 24,
-    borderWidth: 1,
-  },
-  workoutImage: {
-    width: 80,
-    height: 80,
-  },
-  workoutInfo: {
-    flex: 1,
-    padding: 12,
-    justifyContent: 'center',
-  },
-  workoutTitle: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  workoutMeta: {
-    flexDirection: 'row',
-  },
-  workoutMetaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 16,
-  },
-  workoutMetaText: {
-    fontSize: 12,
-    marginLeft: 4,
-  },
-  workoutAction: {
-    justifyContent: 'center',
-    paddingRight: 12,
-  },
   sessionCard: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-  },
-  sessionDay: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    marginRight: 12,
-  },
-  sessionDayText: {
-    fontSize: 12,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
   },
   sessionInfo: {
     flex: 1,
@@ -419,60 +301,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 4,
   },
-  sessionMeta: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  sessionMetaItem: {
+  sessionDetail: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 12,
+    marginTop: 2,
   },
-  sessionMetaText: {
-    fontSize: 12,
-    marginLeft: 4,
+  sessionIcon: {
+    marginRight: 4,
   },
-  sessionVirtual: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  sessionVirtualText: {
-    fontSize: 12,
-    marginLeft: 4,
-  },
-  joinButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  joinButtonText: {
+  sessionText: {
     fontSize: 12,
   },
-  mindsetCard: {
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 24,
-    borderWidth: 1,
+  sessionType: {
+    alignItems: 'flex-end',
   },
-  quoteContainer: {
-    marginBottom: 16,
+  badge: {
+    borderRadius: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    marginBottom: 4,
   },
-  quoteText: {
-    fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 8,
-  },
-  quoteAuthor: {
-    fontSize: 14,
-    textAlign: 'right',
-  },
-  mindsetButton: {
-    borderRadius: 24,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  mindsetButtonText: {
-    fontSize: 14,
+  badgeText: {
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });

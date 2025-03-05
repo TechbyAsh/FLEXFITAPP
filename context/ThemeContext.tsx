@@ -1,84 +1,53 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext } from 'react';
 
-// Define theme types
-type ThemeColors = {
-  primary: string;
-  secondary: string;
-  text: string;
-  background: string;
-  card: string;
-  border: string;
-  surface: string;
-};
-
-type ThemeTypography = {
-  fontFamily: {
-    regular: string;
-    medium: string;
-    bold: string;
-  };
-  fontSize: {
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
-  };
-};
-
-type Theme = {
-  dark: boolean;
-  colors: ThemeColors;
-  typography: ThemeTypography;
-};
-
-// Define themes
-const lightTheme: Theme = {
-  dark: false,
+// Define theme type
+type ThemeType = {
   colors: {
-    primary: '#000000', // Black
-    secondary: '#D4AF37', // Gold
-    text: '#333333',
-    background: '#FFFFFF',
-    card: '#F5F5F5',
-    border: '#E0E0E0',
-    surface: '#FFFFFF',
+    primary: string;
+    secondary: string;
+    text: string;
+    background: string;
+    border: string;
+    success: string;
+    error: string;
+    card: string;
+    overlay: string;
   },
   typography: {
     fontFamily: {
-      regular: 'Montserrat-Regular, System',
-      medium: 'Montserrat-Medium, System',
-      bold: 'Montserrat-Bold, System',
+      regular: string;
+      medium: string;
+      bold: string;
     },
     fontSize: {
-      xs: 12,
-      sm: 14,
-      md: 16,
-      lg: 18,
-      xl: 24,
-      xxl: 32,
-    },
+      xs: number;
+      sm: number;
+      md: number;
+      lg: number;
+      xl: number;
+      xxl: number;
+    }
   },
 };
 
-const darkTheme: Theme = {
-  dark: true,
+// Default theme
+const theme: ThemeType = {
   colors: {
-    primary: '#000000', // Black
+    primary: '#000000',
     secondary: '#D4AF37', // Gold
     text: '#FFFFFF',
     background: '#121212',
-    card: '#1E1E1E',
     border: '#333333',
-    surface: '#1E1E1E',
+    success: '#4CAF50',
+    error: '#F44336',
+    card: '#1E1E1E',
+    overlay: 'rgba(0,0,0,0.7)',
   },
   typography: {
     fontFamily: {
-      regular: 'Montserrat-Regular, System',
-      medium: 'Montserrat-Medium, System',
-      bold: 'Montserrat-Bold, System',
+      regular: 'System',
+      medium: 'System',
+      bold: 'System',
     },
     fontSize: {
       xs: 12,
@@ -87,45 +56,21 @@ const darkTheme: Theme = {
       lg: 18,
       xl: 24,
       xxl: 32,
-    },
+    }
   },
 };
 
 // Create context
-type ThemeContextType = {
-  theme: Theme;
-  toggleTheme: () => void;
-};
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ThemeContext = createContext<ThemeType>(theme);
 
 // Provider component
-type ThemeProviderProps = {
-  children: ReactNode;
-};
-
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const systemColorScheme = useColorScheme();
-  const [isDarkMode, setIsDarkMode] = useState(systemColorScheme === 'dark');
-
-  const theme = isDarkMode ? darkTheme : lightTheme;
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
-
+export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={theme}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-// Hook to use the theme context
-export const useTheme = (): Theme => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context.theme;
-};
+// Hook for using the theme
+export const useTheme = () => useContext(ThemeContext);

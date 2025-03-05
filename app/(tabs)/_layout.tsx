@@ -1,8 +1,7 @@
-
 import { Tabs } from 'expo-router';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
-import { View, StyleSheet, Platform } from 'react-native';
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -67,23 +66,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="planner"
+        name="profile"
         options={{
-          title: "Planner",
+          title: "Profile",
           tabBarIcon: ({ color, size }) => (
             <View style={styles.iconContainer}>
-              <Ionicons name="calendar" size={size} color={color} />
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="community"
-        options={{
-          title: "Community",
-          tabBarIcon: ({ color, size }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons name="people" size={size} color={color} />
+              <Ionicons name="person" size={size} color={color} />
             </View>
           ),
         }}
@@ -94,6 +82,7 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   iconContainer: {
-    marginTop: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
