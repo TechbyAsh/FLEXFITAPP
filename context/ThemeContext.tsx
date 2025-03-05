@@ -48,9 +48,9 @@ const lightTheme: Theme = {
   },
   typography: {
     fontFamily: {
-      regular: 'Montserrat-Regular',
-      medium: 'Montserrat-Medium',
-      bold: 'Montserrat-Bold',
+      regular: 'Montserrat-Regular, System',
+      medium: 'Montserrat-Medium, System',
+      bold: 'Montserrat-Bold, System',
     },
     fontSize: {
       xs: 12,
@@ -76,9 +76,9 @@ const darkTheme: Theme = {
   },
   typography: {
     fontFamily: {
-      regular: 'Montserrat-Regular',
-      medium: 'Montserrat-Medium',
-      bold: 'Montserrat-Bold',
+      regular: 'Montserrat-Regular, System',
+      medium: 'Montserrat-Medium, System',
+      bold: 'Montserrat-Bold, System',
     },
     fontSize: {
       xs: 12,
