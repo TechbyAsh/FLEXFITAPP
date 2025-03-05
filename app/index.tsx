@@ -11,7 +11,7 @@ export default function OnboardingScreen() {
 
   const onboardingData = [
     {
-      title: "Welcome to FitElite",
+      title: "Welcome to FLEX",
       description: "Your personal fitness journey begins here.",
       // image: require('../assets/images/onboarding-1.png')
     },
