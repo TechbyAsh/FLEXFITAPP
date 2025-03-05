@@ -14,7 +14,7 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // Using system fonts temporarily
+  // Using system fonts until custom fonts are available
   const [loaded, error] = useFonts({
     'Montserrat-Bold': require('expo-font'),
     'Montserrat-Medium': require('expo-font'),
