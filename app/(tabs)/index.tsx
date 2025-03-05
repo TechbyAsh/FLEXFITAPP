@@ -1,5 +1,4 @@
-
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, ScrollView, TouchableOpacity, Image, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,7 +6,7 @@ import { router } from 'expo-router';
 
 export default function DashboardScreen() {
   const theme = useTheme();
-  
+
   // Mock data for display
   const progress = 0.65; // 65% progress
   const todaysWorkout = {
@@ -15,13 +14,13 @@ export default function DashboardScreen() {
     timeMinutes: 45,
     exercises: 8,
   };
-  
+
   const stats = [
     { label: "Workouts", value: "15", icon: "barbell" },
     { label: "Calories", value: "12,500", icon: "flame" },
     { label: "Streak", value: "7 days", icon: "trending-up" },
   ];
-  
+
   const upcomingSessions = [
     { 
       id: 1, 
@@ -60,13 +59,23 @@ export default function DashboardScreen() {
           style={[styles.profileButton, { backgroundColor: theme.colors.surface }]}
           onPress={() => router.push('/profile')}
         >
-          <Image
-            source={require('../../assets/images/profile-placeholder.png')}
-            style={styles.profileImage}
-          />
+          <View 
+            style={[
+              styles.profileImage, 
+              { 
+                backgroundColor: theme.colors.border,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }
+            ]} 
+          >
+            <Text style={{ color: theme.colors.text, fontSize: 18, fontWeight: 'bold' }}>
+              ME
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
-      
+
       {/* Progress card */}
       <LinearGradient
         colors={['#000000', '#222222']}
@@ -82,7 +91,7 @@ export default function DashboardScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <View style={styles.progressBarContainer}>
           <View style={[styles.progressBar, { backgroundColor: theme.colors.border }]}>
             <View 
@@ -96,7 +105,7 @@ export default function DashboardScreen() {
             {`${Math.round(progress * 100)}%`}
           </Text>
         </View>
-        
+
         <View style={styles.statsContainer}>
           {stats.map((stat, index) => (
             <View key={index} style={styles.statItem}>
@@ -113,7 +122,7 @@ export default function DashboardScreen() {
           ))}
         </View>
       </LinearGradient>
-      
+
       {/* Today's workout */}
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
@@ -125,7 +134,7 @@ export default function DashboardScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       <TouchableOpacity 
         style={[styles.workoutCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}
         onPress={() => router.push('/workout-details')}
@@ -157,7 +166,7 @@ export default function DashboardScreen() {
           <Ionicons name="play-circle" size={36} color={theme.colors.secondary} />
         </View>
       </TouchableOpacity>
-      
+
       {/* Upcoming sessions */}
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
@@ -169,7 +178,7 @@ export default function DashboardScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      
+
       {upcomingSessions.map(session => (
         <TouchableOpacity 
           key={session.id}
@@ -180,7 +189,7 @@ export default function DashboardScreen() {
               {session.day.substring(0, 3)}
             </Text>
           </View>
-          
+
           <View style={styles.sessionInfo}>
             <Text style={[styles.sessionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
               {session.title}
@@ -210,7 +219,7 @@ export default function DashboardScreen() {
               )}
             </View>
           </View>
-          
+
           <TouchableOpacity style={[styles.joinButton, { backgroundColor: theme.colors.secondary }]}>
             <Text style={[styles.joinButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
               Join
@@ -218,14 +227,14 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </TouchableOpacity>
       ))}
-      
+
       {/* Daily mindset coaching */}
       <View style={styles.sectionHeader}>
         <Text style={[styles.sectionTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
           Today's Mindset
         </Text>
       </View>
-      
+
       <View style={[styles.mindsetCard, { backgroundColor: theme.colors.surface, borderColor: theme.colors.border }]}>
         <View style={styles.quoteContainer}>
           <Text style={[styles.quoteText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular, fontStyle: 'italic' }]}>
