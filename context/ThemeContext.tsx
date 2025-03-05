@@ -1,62 +1,61 @@
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
-// Define theme colors
-export const theme = {
-  colors: {
-    primary: '#000000', // Black
-    secondary: '#D4AF37', // Gold
-    accent1: '#4CAF50', // Green
-    accent2: '#C0C0C0', // Silver
-    background: '#121212', // Dark background
-    surface: '#1E1E1E', // Slightly lighter surface
-    text: '#FFFFFF', // White text
-    textSecondary: '#AAAAAA', // Light grey text
-    border: '#333333', // Dark border
-    success: '#4CAF50', // Green for success
-    error: '#F44336', // Red for errors
+// Define the theme colors
+export const colors = {
+  background: {
+    primary: '#000000',
+    secondary: '#121212',
+    tertiary: '#1E1E1E',
   },
-  spacing: {
-    xs: 4,
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
-    xxl: 48,
+  text: {
+    primary: '#FFFFFF',
+    secondary: '#CCCCCC',
+    tertiary: '#999999',
   },
-  radius: {
-    sm: 4,
-    md: 8,
-    lg: 16,
-    xl: 24,
-    round: 9999,
+  accent: {
+    gold: '#D4AF37',
+    green: '#4CAF50',
+    silver: '#C0C0C0',
   },
-  typography: {
-    fontFamily: {
-      regular: 'Montserrat-Regular',
-      medium: 'Montserrat-Medium',
-      bold: 'Montserrat-Bold',
-    },
-    fontSize: {
-      xs: 12,
-      sm: 14,
-      md: 16,
-      lg: 18,
-      xl: 20,
-      xxl: 24,
-      xxxl: 32,
-    },
-  },
+  button: {
+    primary: '#D4AF37',
+    secondary: '#4CAF50',
+    disabled: '#333333',
+  }
 };
 
-const ThemeContext = createContext(theme);
+// Create the theme context
+type ThemeContextType = {
+  colors: typeof colors;
+  darkMode: boolean;
+  toggleTheme: () => void;
+};
 
-export const useTheme = () => useContext(ThemeContext);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider = ({ children }) => {
-  return (
-    <ThemeContext.Provider value={theme}>
-      {children}
-    </ThemeContext.Provider>
-  );
+// Theme provider component
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [darkMode, setDarkMode] = useState(true); // Default to dark mode
+
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
+  const value = {
+    colors,
+    darkMode,
+    toggleTheme,
+  };
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+};
+
+// Custom hook to use the theme context
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
 };
