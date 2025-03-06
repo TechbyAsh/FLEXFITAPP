@@ -3,6 +3,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DashboardScreen() {
   const theme = useTheme();
@@ -42,6 +43,7 @@ export default function DashboardScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <SafeAreaView>
       <LinearGradient 
         colors={theme.colors.gradients.dark}
         style={styles.backgroundGradient}
@@ -227,7 +229,9 @@ export default function DashboardScreen() {
           </View>
         </View>
       </View>
+      </SafeAreaView>
     </ScrollView>
+
   );
 }
 

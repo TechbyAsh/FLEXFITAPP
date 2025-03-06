@@ -149,8 +149,13 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingBottom: 48,
     overflow: 'hidden',
-    position: 'relative',
+    position: 'absolute',  // Ensures it stays at the bottom
+    bottom: 0,             // Anchors it to the bottom
+    width: '100%',         // Ensures full width
+    backgroundColor: 'rgba(255, 255, 255, 0.1',
+   
   },
+
   glassBg: {
     ...StyleSheet.absoluteFillObject,
     borderTopLeftRadius: 30,
@@ -200,9 +205,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 16,
   },
   button: {
     flex: 1,
+    height: 50,
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
