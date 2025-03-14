@@ -42,13 +42,15 @@ export default function DashboardScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <SafeAreaView>
+    
+      <SafeAreaView style={styles.container}>
+        <View style={styles.backgroundWrapper}>
       <LinearGradient 
         colors={theme.colors.gradients.dark}
         style={styles.backgroundGradient}
       />
-      
+      </View>
+      <ScrollView >
       <View style={styles.header}>
         <Text style={[styles.welcomeText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
           Welcome back!
@@ -229,8 +231,125 @@ export default function DashboardScreen() {
           </View>
         </View>
       </View>
+      {/* Fitness Challenges */}
+      <View style={styles.cardWrapper}>
+        <View style={[styles.card, styles.glassCard]}>
+          <LinearGradient
+            colors={theme.colors.gradients.card}
+            style={styles.cardGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+          <View style={styles.cardContent}>
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                Fitness Challenges
+              </Text>
+              <TouchableOpacity onPress={() => router.push('/challenges')}>
+                <Text style={[styles.viewAllText, { color: theme.colors.secondary }]}>View All</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              style={styles.challengesCarousel}
+              contentContainerStyle={styles.challengesCarouselContent}
+            >
+              {[
+                { 
+                  id: 1, 
+                  title: "30-Day HIIT Challenge", 
+                  duration: "4 weeks",
+                  level: "Intermediate",
+                  members: 2453,
+                  image: require('../../assets/images/flex-logo-bg.png') 
+                },
+                { 
+                  id: 2, 
+                  title: "Core Crusher", 
+                  duration: "3 weeks",
+                  level: "Beginner",
+                  members: 1872,
+                  image: require('../../assets/images/flex-logo-bg.png') 
+                },
+                { 
+                  id: 3, 
+                  title: "Strength Builder", 
+                  duration: "6 weeks",
+                  level: "Advanced",
+                  members: 985,
+                  image: require('../../assets/images/flex-logo-bg.png') 
+                },
+                { 
+                  id: 4, 
+                  title: "Stretch & Flow", 
+                  duration: "4 weeks",
+                  level: "All Levels",
+                  members: 3241,
+                  image: require('../../assets/images/flex-logo-bg.png') 
+                }
+              ].map((challenge) => (
+                <TouchableOpacity 
+                  key={challenge.id}
+                  style={styles.challengeCard}
+                  onPress={() => router.push(`/challenge/${challenge.id}`)}
+                >
+                  <View style={styles.challengeImageContainer}>
+                    <Image 
+                      source={challenge.image} 
+                      style={styles.challengeImage}
+                      resizeMode="cover"
+                    />
+                    <LinearGradient
+                      colors={['transparent', 'rgba(0,0,0,0.8)']}
+                      style={styles.challengeImageOverlay}
+                    />
+                    <View style={styles.challengeLevel}>
+                      <Text style={styles.challengeLevelText}>{challenge.level}</Text>
+                    </View>
+                  </View>
+                  
+                  <View style={styles.challengeContent}>
+                    <Text style={[styles.challengeTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                      {challenge.title}
+                    </Text>
+                    
+                    <View style={styles.challengeDetails}>
+                      <View style={styles.challengeDetail}>
+                        <Ionicons name="calendar-outline" size={14} color={theme.colors.secondary} />
+                        <Text style={[styles.challengeDetailText, { color: theme.colors.text }]}>
+                          {challenge.duration}
+                        </Text>
+                      </View>
+                      <View style={styles.challengeDetail}>
+                        <Ionicons name="people-outline" size={14} color={theme.colors.secondary} />
+                        <Text style={[styles.challengeDetailText, { color: theme.colors.text }]}>
+                          {challenge.members.toLocaleString()}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    <LinearGradient
+                      colors={theme.colors.gradients.secondary}
+                      style={styles.joinChallengeButton}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                    >
+                      <Text style={[styles.joinChallengeText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.medium }]}>
+                        Join Challenge
+                      </Text>
+                    </LinearGradient>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      </View>
+      </ScrollView>
       </SafeAreaView>
-    </ScrollView>
+   
 
   );
 }
@@ -241,11 +360,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#121212',
   },
   backgroundGradient: {
+    flex: 1,
     position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
     height: '100%',
+  },
+  backgroundWrapper: {
+    ...StyleSheet.absoluteFillObject, // Ensures full-screen coverage 
   },
   header: {
     flexDirection: 'row',
@@ -473,6 +596,81 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 10,
+    fontWeight: 'bold',
+  },
+
+  // Challenges carousel styles
+  challengesCarousel: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  challengesCarouselContent: {
+    paddingRight: 16,
+  },
+  challengeCard: {
+    width: 220,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(30,30,30,0.8)',
+    marginRight: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  challengeImageContainer: {
+    height: 120,
+    width: '100%',
+    position: 'relative',
+  },
+  challengeImage: {
+    width: '100%',
+    height: '100%',
+  },
+  challengeImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+  challengeLevel: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  challengeLevelText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  challengeContent: {
+    padding: 12,
+  },
+  challengeTitle: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  challengeDetails: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  challengeDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  challengeDetailText: {
+    fontSize: 12,
+    marginLeft: 4,
+  },
+  joinChallengeButton: {
+    borderRadius: 12,
+    paddingVertical: 8,
+    alignItems: 'center',
+  },
+  joinChallengeText: {
+    fontSize: 12,
     fontWeight: 'bold',
   },
 });

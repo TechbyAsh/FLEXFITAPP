@@ -16,6 +16,7 @@ type ThemeType = {
       primary: string[];
       secondary: string[];
       dark: string[];
+      bright: string[];
       card: string[];
     };
     glass: {
@@ -61,7 +62,8 @@ const theme: ThemeType = {
     gradients: {
       primary: ['#4ADE80', '#22C55E'], // Bright green to emerald
       secondary: ['#4ADE80', '#22C55E'], // Bright green to emerald
-      dark: ['#0D1117', '#161B22'],
+      dark: ['#474449', '#2D232E'],
+      bright: ['#505250', '#CBD3C1'],
       card: ['rgba(22,27,34,0.9)', 'rgba(13,17,23,0.9)'],
     },
     glass: {
