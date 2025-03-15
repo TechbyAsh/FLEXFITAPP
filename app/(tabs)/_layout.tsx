@@ -64,6 +64,14 @@ export default function TabLayout() {
           headerTitle: "My Schedule",
         }}
       />
+       <Tabs.Screen
+        name="analytics"
+        options={{
+          title: 'Analytics',
+          tabBarIcon: ({ color }) => <Ionicons name="bar-chart-outline" size={24} color={color} />, //Using a more appropriate icon
+          headerTitle: "Analytics",
+        }}
+      />
       <Tabs.Screen
         name="profile"
         options={{
