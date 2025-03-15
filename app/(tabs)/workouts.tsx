@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, FlatList }
 import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function WorkoutsScreen() {
   const theme = useTheme();
@@ -46,6 +47,12 @@ export default function WorkoutsScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.backgroundWrapper}>
+      <LinearGradient 
+        colors={theme.colors.gradients.dark}
+        style={styles.backgroundGradient}
+      />
+      </View>
       {/* Tabs */}
       <View style={[styles.tabContainer, { borderBottomColor: theme.colors.border }]}>
         <TouchableOpacity
@@ -279,6 +286,17 @@ export default function WorkoutsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backgroundGradient: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    height: '100%',
+  },
+  backgroundWrapper: {
+    ...StyleSheet.absoluteFillObject, // Ensures full-screen coverage 
   },
   tabContainer: {
     flexDirection: 'row',

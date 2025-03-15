@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const theme = useTheme();
@@ -65,12 +66,14 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
+    <ScrollView>
+      <View style={styles.backgroundWrapper}>
       <LinearGradient 
         colors={theme.colors.gradients.dark}
         style={styles.backgroundGradient}
       />
-      
+      </View>
       {/* Profile Header */}
       <View style={styles.header}>
         <LinearGradient
@@ -252,12 +255,17 @@ export default function ProfileScreen() {
         Version 1.0.0
       </Text>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#121212',
+  },
+  backgroundWrapper: {
+    ...StyleSheet.absoluteFillObject, // Ensures full-screen coverage 
   },
   backgroundGradient: {
     position: 'absolute',

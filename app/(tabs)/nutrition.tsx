@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NutritionScreen() {
   const theme = useTheme();
@@ -52,12 +53,14 @@ export default function NutritionScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container} >
+    <View style={styles.backgroundWrapper}>
       <LinearGradient 
         colors={theme.colors.gradients.dark}
         style={styles.backgroundGradient}
       />
-      
+      </View>
+      <ScrollView >
       {/* Tabs */}
       <View style={styles.tabsContainer}>
         <TouchableOpacity 
@@ -166,12 +169,16 @@ export default function NutritionScreen() {
         ))}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backgroundWrapper: {
+    ...StyleSheet.absoluteFillObject, // Ensures full-screen coverage 
   },
   backgroundGradient: {
     position: 'absolute',
