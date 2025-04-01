@@ -1,4 +1,3 @@
-
 import { useState, useContext } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
@@ -6,37 +5,40 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import {registerUser} from '../app/services/authService'
 import {AuthContext} from '../app/services/authContext'
 
-
-export default function SignupScreen() {
+export default function LoginScreen() {
   const theme = useTheme();
-  const {register} = useContext(AuthContext) || {};
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const {login} = useContext(AuthContext) || {};
   
-  const handleSignup =  async () => {
-    console.log('Sign Up button pressed');
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setErrorMessage('Please enter both email and password.');
+      return;
+    }
+  
     setLoading(true);
     setErrorMessage('');
-
-  try {
-    console.log("Calling register function...");
-    await register(email, password, name);
-    console.log("User registered, navigating to home...");
-    router.replace("/(tabs)");
-  } catch (error) {
-    console.error("Signup error:", error);
-    setErrorMessage(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  
+    try {
+        console.log("Calling login function...");
+      const user = await login(email, password); // Call the login function from AuthContext
+      console.log("User logged in, navigating to home...");
+      if (user) {
+        router.replace('/'); // Navigate to the main app on success
+      }
+    } catch (error) {
+        console.error("Login error:", error);
+      setErrorMessage(error.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient 
@@ -51,29 +53,14 @@ export default function SignupScreen() {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.headerContainer}>
             <Text style={[styles.title, { color: theme.colors.secondary, fontFamily: theme.typography.fontFamily.bold }]}>
-              Create Account
+              Welcome Back
             </Text>
             <Text style={[styles.subtitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.regular }]}>
-              Join FLEX and start your fitness journey today
+              Log in to continue your fitness journey
             </Text>
           </View>
 
           <View style={styles.formContainer}>
-            {/* Name Input */}
-            <View style={styles.inputContainer}>
-              <Text style={[styles.inputLabel, { color: theme.colors.text }]}>Full Name</Text>
-              <View style={[styles.inputWrapper, { borderColor: theme.colors.border, backgroundColor: theme.colors.card }]}>
-                <Ionicons name="person-outline" size={20} color={theme.colors.text} style={styles.inputIcon} />
-                <TextInput
-                  style={[styles.input, { color: theme.colors.text }]}
-                  placeholder="Your name"
-                  placeholderTextColor="#666"
-                  value={name}
-                  onChangeText={setName}
-                />
-              </View>
-            </View>
-
             {/* Email Input */}
             <View style={styles.inputContainer}>
               <Text style={[styles.inputLabel, { color: theme.colors.text }]}>Email</Text>
@@ -112,21 +99,36 @@ export default function SignupScreen() {
                   />
                 </TouchableOpacity>
               </View>
-              <Text style={[styles.passwordHint, { color: theme.colors.text }]}>
-                Password must be at least 8 characters
-              </Text>
             </View>
+           
+    
 
-            {/* Signup Button */}
-            <TouchableOpacity 
-              style={[styles.signupButton, { backgroundColor: theme.colors.secondary }]}
-              onPress={handleSignup}
-            >
-              <Text style={[styles.signupButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
-                Sign Up
+            {/* Forgot Password */}
+            <TouchableOpacity style={styles.forgotPassword}>
+              <Text style={[styles.forgotPasswordText, { color: theme.colors.secondary }]}>
+                Forgot Password?
               </Text>
             </TouchableOpacity>
 
+        {/* Show Error Message Here */}
+        {errorMessage ? (
+        <Text style={[styles.errorText, { color: 'red', marginBottom: 10 }]}>
+           {errorMessage}
+           </Text>
+            ) : null}
+
+
+            {/* Login Button */}
+            <TouchableOpacity 
+              style={[styles.loginButton, { backgroundColor: theme.colors.secondary }]}
+              onPress={handleLogin}
+            >
+              <Text style={[styles.loginButtonText, { color: theme.colors.primary, fontFamily: theme.typography.fontFamily.bold }]}>
+                Log In
+              </Text>
+            </TouchableOpacity>
+
+                    
             {/* Or divider */}
             <View style={styles.dividerContainer}>
               <View style={[styles.divider, { backgroundColor: theme.colors.border }]} />
@@ -146,32 +148,24 @@ export default function SignupScreen() {
                 <Text style={[styles.socialButtonText, { color: theme.colors.text }]}>Apple</Text>
               </TouchableOpacity>
             </View>
-            
-            {/* Login Link */}
-            <View style={styles.loginContainer}>
-              <Text style={[styles.loginText, { color: theme.colors.text }]}>
-                Already have an account?
+
+            {/* Sign Up Link */}
+            <View style={styles.signupContainer}>
+              <Text style={[styles.signupText, { color: theme.colors.text }]}>
+                Don't have an account?
               </Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
-                <Text style={[styles.loginLink, { color: theme.colors.secondary }]}>
-                  {" Login"}
+              <TouchableOpacity onPress={() => router.push('/signup')}>
+                <Text style={[styles.signupLink, { color: theme.colors.secondary }]}>
+                  {" Sign Up"}
                 </Text>
               </TouchableOpacity>
             </View>
-
-            {/* Terms */}
-            <Text style={[styles.terms, { color: theme.colors.text }]}>
-              By signing up, you agree to our{" "}
-              <Text style={{ color: theme.colors.secondary }}>Terms & Conditions</Text>
-              {" "}and{" "}
-              <Text style={{ color: theme.colors.secondary }}>Privacy Policy</Text>
-            </Text>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </LinearGradient>
-  ); }
-
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -227,20 +221,21 @@ const styles = StyleSheet.create({
   passwordToggle: {
     padding: 8,
   },
-  passwordHint: {
-    fontSize: 12,
-    marginTop: 4,
-    opacity: 0.7,
+  forgotPassword: {
+    alignSelf: 'flex-end',
+    marginBottom: 24,
   },
-  signupButton: {
+  forgotPasswordText: {
+    fontSize: 14,
+  },
+  loginButton: {
     height: 56,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
     marginBottom: 24,
   },
-  signupButtonText: {
+  loginButtonText: {
     fontSize: 16,
   },
   dividerContainer: {
@@ -275,22 +270,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 8,
   },
-  loginContainer: {
+  signupContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 24,
   },
-  loginText: {
+  signupText: {
     fontSize: 14,
   },
-  loginLink: {
+  signupLink: {
     fontSize: 14,
     fontWeight: 'bold',
   },
-  terms: {
-    fontSize: 12,
+  errorText: {
+    fontSize: 14,
     textAlign: 'center',
-    lineHeight: 18,
-    opacity: 0.7,
+    color: 'red',
+    marginBottom: 10,
   },
 });

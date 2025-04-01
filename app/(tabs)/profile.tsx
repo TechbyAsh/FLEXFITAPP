@@ -3,12 +3,15 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Switch, Image } f
 import { useTheme } from '../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AuthContext } from '../services/authContext';
+
 
 export default function ProfileScreen() {
   const theme = useTheme();
+  const {logout} = useContext(AuthContext)
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
   
@@ -64,6 +67,15 @@ export default function ProfileScreen() {
       ]
     }
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout(); // Call the logout function from AuthContext
+      router.replace('/login'); // Redirect to login/home screen
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -236,7 +248,7 @@ export default function ProfileScreen() {
       <View style={styles.logoutWrapper}>
         <TouchableOpacity 
           style={styles.logoutButton}
-          onPress={() => router.push('/')}
+          onPress={handleLogout}
         >
           <LinearGradient
             colors={['#F44336', '#D32F2F']}

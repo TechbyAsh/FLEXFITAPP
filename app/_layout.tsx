@@ -4,6 +4,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../context/ThemeContext';
+import {AuthProvider} from '../app/services/authContext'
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,6 +50,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
+      <AuthProvider>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -58,6 +60,8 @@ export default function RootLayout() {
           },
         }}
       />
+       </AuthProvider>
     </ThemeProvider>
+   
   );
 }

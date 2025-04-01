@@ -95,6 +95,22 @@ export default function NutritionScreen() {
             Journal
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity 
+          style={[
+            styles.tab, 
+            activeTab === 'Meal Inspo' && styles.activeTab
+          ]}
+          onPress={() => setActiveTab('Meal Inspo')}
+        >
+          <Text 
+            style={[
+              styles.tabText, 
+              { color: activeTab === 'Meal Inspo' ? theme.colors.text : 'rgba(255, 255, 255, 0.5)' }
+            ]}
+          >
+           Meal Inspo
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Meals Section */}
