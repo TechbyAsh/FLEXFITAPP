@@ -4,7 +4,7 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../context/ThemeContext';
-import {AuthProvider} from '../app/services/authContext'
+import {AuthProvider} from '../context/authContext'
 
 export {
   // Catch any errors thrown by the Layout component.

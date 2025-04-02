@@ -6,8 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import {registerUser} from '../app/services/authService'
-import {AuthContext} from '../app/services/authContext'
+import {registerUser} from '../services/authService'
+import {AuthContext} from '../context/authContext'
 
 
 export default function SignupScreen() {

@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useState, useContext } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AuthContext } from '../services/authContext';
+import { AuthContext } from '../../context/authContext';
 
 
 export default function ProfileScreen() {

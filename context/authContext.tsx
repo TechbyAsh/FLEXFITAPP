@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { loginUser, logoutUser, getCurrentUser, registerUser } from '../services/authService';
 
 interface AuthContextType {
@@ -17,20 +18,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchUser = async () => {
       const currentUser = await getCurrentUser();
-      setUser(currentUser);
+      if (currentUser) {
+        setUser(currentUser);
+      }
     };
     fetchUser();
   }, []);
 
-  const login = async (email: string, password: string) => {
-    const user = await loginUser(email, password);
-    setUser(user);
-  };
 
-  const logout = async () => {
-    await logoutUser();
-    setUser(null);
-  };
+  const login = async (email: string, password: string) => {
+  const user = await loginUser(email, password);
+  setUser(user);
+};
+
+const logout = async () => {
+  await logoutUser();
+  setUser(null);
+};
+
 
   const register = async (email: string, password: string, name: string) => {
     console.log("AuthContext register function called"); // Debugging log

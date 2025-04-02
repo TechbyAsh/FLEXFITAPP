@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import {AuthContext} from '../app/services/authContext'
+import {AuthContext} from '../context/authContext'
 
 export default function LoginScreen() {
   const theme = useTheme();
@@ -21,19 +21,37 @@ export default function LoginScreen() {
       setErrorMessage('Please enter both email and password.');
       return;
     }
+    
+    if (!login) {
+      console.error("Login function is undefined!");
+      setErrorMessage('Authentication system error. Please try again later.');
+      return;
+    }
   
     setLoading(true);
     setErrorMessage('');
   
     try {
-        console.log("Calling login function...");
-      const user = await login(email, password); // Call the login function from AuthContext
+      console.log("Calling login function...");
+      const result = await login(email, password); // Call the login function and store result
+      console.log("Login result:", result);
       console.log("User logged in, navigating to home...");
-      if (user) {
-        router.replace('/'); // Navigate to the main app on success
+      
+      // Try alternative navigation methods if the first doesn't work
+      try {
+        console.log("Attempting navigation with router.replace...");
+        router.replace('/(tabs)');
+      } catch (navError) {
+        console.error("Navigation error with replace:", navError);
+        try {
+          console.log("Trying router.push instead...");
+          router.push('/(tabs)');
+        } catch (pushError) {
+          console.error("Navigation error with push:", pushError);
+        }
       }
     } catch (error) {
-        console.error("Login error:", error);
+      console.error("Login error:", error);
       setErrorMessage(error.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
