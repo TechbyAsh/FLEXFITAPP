@@ -4,9 +4,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { AuthContext } from '../../context/authContext';
+import { useContext } from 'react';
 
 export default function DashboardScreen() {
   const theme = useTheme();
+  const auth = useContext(AuthContext); // ✅ Correct way to access context
 
   // Mock data for display
   const progress = 0.65; // 65% progress
@@ -41,6 +44,10 @@ export default function DashboardScreen() {
     },
   ];
 
+  console.log("🎉 Auth Context Data:", auth);
+  console.log("👤 User Data from Context:", auth?.user);
+  console.log("🔑 User ID from Context:", auth?.userId);
+
   return (
     
       <SafeAreaView style={styles.container}>
@@ -53,7 +60,7 @@ export default function DashboardScreen() {
       <ScrollView >
       <View style={styles.header}>
         <Text style={[styles.welcomeText, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          Welcome back!
+          Welcome {auth?.user?.name || "Guest"}!
         </Text>
         <TouchableOpacity 
           style={styles.notificationButton}

@@ -11,7 +11,7 @@ import { AuthContext } from '../../context/authContext';
 
 export default function ProfileScreen() {
   const theme = useTheme();
-  const {logout} = useContext(AuthContext)
+  const {logout, auth} = useContext(AuthContext)
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
   
@@ -124,7 +124,7 @@ export default function ProfileScreen() {
         </View>
         
         <Text style={[styles.profileName, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-          {user.name}
+        {auth?.userId?.name || user.name }
         </Text>
         <Text style={[styles.profileEmail, { color: theme.colors.text }]}>
           {user.email}

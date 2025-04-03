@@ -11,6 +11,7 @@ export const registerUser = async (email: string, password: string, name: string
       const registeredUser = await Backendless.UserService.register(user);
       // Store user session
     await AsyncStorage.setItem('user', JSON.stringify(registeredUser));
+    await AsyncStorage.setItem('userId', registeredUser.objectId); // Store User ID separately
 
     return registeredUser;
   } catch (error) {
@@ -25,6 +26,7 @@ export const registerUser = async (email: string, password: string, name: string
 
       // Store user session
       await AsyncStorage.setItem('user', JSON.stringify(user));
+      await AsyncStorage.setItem('userId', user.objectId); // Store User ID separately
   
       return user;
     } catch (error) {
@@ -41,6 +43,7 @@ export const registerUser = async (email: string, password: string, name: string
       await Backendless.UserService.logout();
       // Clear stored user session
     await AsyncStorage.removeItem('user');
+    await AsyncStorage.removeItem('userId'); // Clear User ID
     } catch (error) {
       throw new Error(error.message);
     }
@@ -58,6 +61,37 @@ export const registerUser = async (email: string, password: string, name: string
       return await Backendless.UserService.getCurrentUser();
     } catch (error) {
       return null;
+    }
+  };
+
+  export const getUserById = async (userId: string) => {
+    try {
+      return await Backendless.Data.of('Users').findById(userId);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      return null;
+    }
+  };
+  
+  // Update user profile
+  export const updateUserProfile = async (userId: string, newData: object) => {
+    try {
+      // Fetch existing user data
+      let user = await Backendless.Data.of('Users').findById(userId);
+      
+      // Merge new data with existing user object
+      const updatedUser = { ...user, ...newData };
+  
+      // Save updated user data
+      await Backendless.Data.of('Users').save(updatedUser);
+      
+      // Update stored session with the new data
+      await AsyncStorage.setItem('user', JSON.stringify(updatedUser));
+  
+      return updatedUser;
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      throw new Error(error.message);
     }
   };
   
