@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../../context/authContext';
 import { useContext } from 'react';
+import { GlassCard } from  '../components/GlassCard';
 
 export default function DashboardScreen() {
   const theme = useTheme();
@@ -71,6 +72,49 @@ export default function DashboardScreen() {
           </View>
         </TouchableOpacity>
       </View>
+      {/* Daily Flex */}
+      <View style={styles.dailyflexwrapper}>
+        <GlassCard width={320}> 
+          <View>
+          <Text style={[styles.cardTitle, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}> 
+          Your Daily Flex
+           </Text>
+           </View>
+          <ScrollView>
+          <TouchableOpacity style={styles.sessionCard}>
+            <View style={styles.flexCardBg}> 
+            <View style={styles.sessionContent}> 
+            <Text style={styles.sessionTitle}> 
+              "Add mock daily flex details "
+            </Text>
+            </View>
+            </View>
+
+           </TouchableOpacity>
+           <TouchableOpacity style={styles.sessionCard}>
+            <View style={styles.flexCardBg}> 
+            <View style={styles.sessionContent}> 
+            <Text style={styles.sessionTitle}> 
+              "Add mock daily flex details "
+            </Text>
+            </View>
+            </View>
+
+           </TouchableOpacity>
+           <TouchableOpacity style={styles.sessionCard}>
+            <View style={styles.flexCardBg}> 
+            <View style={styles.sessionContent}> 
+            <Text style={styles.sessionTitle}> 
+              "Add mock daily flex details "
+            </Text>
+            </View>
+            </View>
+
+           </TouchableOpacity>
+
+          </ScrollView>
+          </GlassCard>
+        </View>
 
       {/* Weekly Progress */}
       <View style={styles.cardWrapper}>
@@ -147,32 +191,6 @@ export default function DashboardScreen() {
             </View>
           </View>
         </View>
-      </View>
-
-      {/* Stats */}
-      <View style={styles.statsContainer}>
-        {stats.map((stat, index) => (
-          <View key={index} style={styles.statCardWrapper}>
-            <View style={styles.statCard}>
-              <View style={styles.statCardInner}>
-                <View style={styles.iconCircle}>
-                  <LinearGradient
-                    colors={theme.colors.gradients.secondary}
-                    style={styles.iconGradient}
-                  >
-                    <Ionicons name={stat.icon} size={22} color={theme.colors.primary} />
-                  </LinearGradient>
-                </View>
-                <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
-                  {stat.value}
-                </Text>
-                <Text style={[styles.statLabel, { color: theme.colors.text }]}>
-                  {stat.label}
-                </Text>
-              </View>
-            </View>
-          </View>
-        ))}
       </View>
 
       {/* Upcoming Sessions */}
@@ -413,6 +431,13 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
   },
+  dailyflexwrapper: {
+    marginHorizontal: 20,
+    alignItems: 'center',
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
   glassCard: {
     backgroundColor: 'transparent',
     borderWidth: 1,
@@ -586,6 +611,12 @@ const styles = StyleSheet.create({
   },
   sessionType: {
     alignItems: 'flex-end',
+  },
+  flexCardBg: {
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    backgroundColor: 'rgba(30,30,30,)',
   },
   badge: {
     borderRadius: 12,

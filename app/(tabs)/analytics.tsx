@@ -5,6 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import {Spacer} from '../components/spacer'
 
 export default function AnalyticsScreen() {
   const theme = useTheme();
@@ -12,6 +13,13 @@ export default function AnalyticsScreen() {
   const [journalEntry, setJournalEntry] = useState('');
   const [photos, setPhotos] = useState<string[]>([]);
   const [showGoalForm, setShowGoalForm] = useState(false);
+  const [journalEntries, setJournalEntries] = useState([
+    {
+      date: new Date(),
+      text: 'Started my fitness journey today! 💪',
+      photos: []
+    }
+  ]);
 
   const [newGoal, setNewGoal] = useState({
     title: '',
@@ -73,6 +81,12 @@ export default function AnalyticsScreen() {
     completedGoals: 2,
   };
 
+  const stats = [
+    { label: "Workouts", value: "15", icon: "barbell" },
+    { label: "Calories", value: "12,500", icon: "flame" },
+    { label: "Streak", value: "7 days", icon: "trending-up" },
+  ];
+
   const workoutHistory = [
     { 
       id: 1, 
@@ -85,23 +99,7 @@ export default function AnalyticsScreen() {
     // Add more workout history entries
   ];
 
-  /*const goals = [
-    {
-      id: 1,
-      title: 'Weight Loss',
-      target: 'Lose 5kg',
-      progress: 60,
-      deadline: '2024-03-01'
-    },
-    {
-      id: 2,
-      title: 'Strength',
-      target: 'Bench press 80kg',
-      progress: 75,
-      deadline: '2024-02-15'
-    }
-  ];
-*/
+  
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.backgroundWrapper}>
@@ -140,23 +138,39 @@ export default function AnalyticsScreen() {
 
       {activeTab === 'progress' && (
         <View style={styles.progressContainer}>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <LinearGradient
-                colors={theme.colors.gradients.card}
-                style={styles.cardGradient}
-              />
-              <Text style={[styles.statValue, { color: theme.colors.text }]}>
-                {progressData.monthlyWorkouts}
-              </Text>
-              <Text style={[styles.statLabel, { color: theme.colors.textSecondary }]}>
-                Workouts This Month
-              </Text>
+          {/* Stats */}
+      <View style={styles.statsContainer}>
+        {stats.map((stat, index) => (
+          <View key={index} style={styles.statCardWrapper}>
+            <View style={styles.prostatCard}>
+              <View style={styles.statCardInner}>
+                <View style={styles.iconCircle}>
+                  <LinearGradient
+                    colors={theme.colors.gradients.secondary}
+                    style={styles.iconGradient}
+                  >
+                    <Ionicons name={stat.icon} size={22} color={theme.colors.primary} />
+                  </LinearGradient>
+                </View>
+                <Text style={[styles.statValue, { color: theme.colors.text, fontFamily: theme.typography.fontFamily.bold }]}>
+                  {stat.value}
+                </Text>
+                <Text style={[styles.statLabel, { color: theme.colors.text }]}>
+                  {stat.label}
+                </Text>
+              </View>
             </View>
-            {/* Add more stat cards */}
           </View>
-          
-          {/* Add charts/graphs here */}
+        ))}
+      </View>
+
+    <View>
+      { /* Add Charts */}
+    </View>
+
+    <View>
+      { /* Add Charts */}
+    </View>
         </View>
       )}
 
@@ -373,10 +387,18 @@ export default function AnalyticsScreen() {
             style={styles.saveButton}
             onPress={() => {
               // Handle save with photos
-              console.log('Saving entry with photos:', {
-                text: journalEntry,
-                photos: photos
-              });
+              if (journalEntry.trim() || photos.length > 0) {
+                setJournalEntries([
+                  {
+                    date: new Date(),
+                    text: journalEntry,
+                    photos: [...photos]
+                  },
+                  ...journalEntries
+                ]);
+                setJournalEntry('');
+                setPhotos([]);
+              }
             }}
           >
             <LinearGradient
@@ -388,6 +410,38 @@ export default function AnalyticsScreen() {
               </Text>
             </LinearGradient>
           </TouchableOpacity>
+              
+             {/* Display existing journal entries */}
+             <View style={styles.historyContainer}>
+             <ScrollView style={styles.entriesContainer}>
+            {journalEntries.map((entry, index) => (
+              <View key={index} style={styles.journalCard}>
+                <LinearGradient
+                  colors={theme.colors.gradients.card}
+                  style={styles.cardGradient}
+                />
+                <Text style={[styles.entryDate, { color: theme.colors.text }]}>
+                  {new Date(entry.date).toLocaleDateString()}
+                </Text>
+                <Text style={[styles.entryText, { color: theme.colors.text }]}>
+                  {entry.text}
+                </Text>
+                {entry.photos && entry.photos.length > 0 && (
+                  <View style={styles.entryPhotoGrid}>
+                    {entry.photos.map((photo, photoIndex) => (
+                      <Image 
+                        key={photoIndex}
+                        source={{ uri: photo }}
+                        style={styles.entryPhoto}
+                      />
+                    ))}
+                  </View>
+                )}
+              </View>
+            ))}
+          </ScrollView>
+          </View>
+         
         </View>
       )}
     </ScrollView>
@@ -463,6 +517,49 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 4,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
+  statCardWrapper: {
+    flex: 1,
+    marginHorizontal: 4,
+  },
+  prostatCard: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 2,
+    backgroundColor: '#1e1e1e',
+    shadowColor: '#000',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 8,
+  },
+  statCardInner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 14,
+    backgroundColor: '#191919',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: 'hidden',
+    marginBottom: 8,
+  },
+  iconGradient: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   historyContainer: {
     padding: 20,
@@ -647,5 +744,37 @@ const styles = StyleSheet.create({
   imageButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  entriesContainer: {
+    marginBottom: 16,
+  },
+  journalCard: {
+    marginBottom: 16,
+    padding: 16,
+    borderRadius: 16,
+    position: 'relative',
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+  },
+  entryDate: {
+    fontSize: 14,
+    marginBottom: 8,
+    opacity: 0.8,
+  },
+  entryText: {
+    fontSize: 16,
+    marginBottom: 12,
+  },
+  entryPhotoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  entryPhoto: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
   },
 });
