@@ -1,5 +1,5 @@
 
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -98,21 +98,24 @@ export default function NutritionScreen() {
         <TouchableOpacity 
           style={[
             styles.tab, 
-            activeTab === 'Meal Inspo' && styles.activeTab
+            activeTab === 'Meal Tracking' && styles.activeTab
           ]}
-          onPress={() => setActiveTab('Meal Inspo')}
+          onPress={() => setActiveTab('Meal Tracking')}
         >
           <Text 
             style={[
               styles.tabText, 
-              { color: activeTab === 'Meal Inspo' ? theme.colors.text : 'rgba(255, 255, 255, 0.5)' }
+              { color: activeTab === 'Meal Tracking' ? theme.colors.text : 'rgba(255, 255, 255, 0.5)' }
             ]}
           >
-           Meal Inspo
+           Meal Tracking
           </Text>
         </TouchableOpacity>
       </View>
 
+         {/* My Activity Section */}
+       {activeTab === 'My Activity' && (
+           <>
       {/* Meals Section */}
       <View style={styles.sectionWrapper}>
         <View style={styles.sectionHeader}>
@@ -184,6 +187,84 @@ export default function NutritionScreen() {
           </TouchableOpacity>
         ))}
       </View>
+      </>
+        )}
+
+      {activeTab === 'Journal' && (
+        <View style={styles.journalContainer}>
+          <View style={styles.journalForm}>
+            <View style={styles.formGroup}>
+              <Text style={[styles.label, { color: theme.colors.text }]}>Meal Type</Text>
+              <View style={styles.mealTypeButtons}>
+                {['Breakfast', 'Lunch', 'Dinner', 'Snack'].map((type) => (
+                  <TouchableOpacity
+                    key={type}
+                    style={[
+                      styles.mealTypeButton,
+                      { borderColor: theme.colors.secondary }
+                    ]}
+                  >
+                    <Text style={[styles.mealTypeText, { color: theme.colors.text }]}>
+                      {type}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.label, { color: theme.colors.text }]}>Food Items</Text>
+              <TouchableOpacity 
+                style={[styles.addFoodButton, { borderColor: theme.colors.secondary }]}
+                onPress={() => {
+                  // Integration point for MyFitnessPal or custom food search
+                  console.log('Add food item');
+                }}
+              >
+                <Ionicons name="add-circle-outline" size={24} color={theme.colors.secondary} />
+                <Text style={[styles.addFoodText, { color: theme.colors.text }]}>
+                  Add Food Item
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.label, { color: theme.colors.text }]}>Notes</Text>
+              <TextInput
+                style={[
+                  styles.notesInput,
+                  { 
+                    color: theme.colors.text,
+                    backgroundColor: 'rgba(255,255,255,0.05)',
+                    borderColor: theme.colors.border
+                  }
+                ]}
+                multiline
+                placeholder="Add notes about your meal..."
+                placeholderTextColor="rgba(255,255,255,0.5)"
+              />
+            </View>
+
+            <TouchableOpacity 
+              style={styles.saveEntryButton}
+              onPress={() => {
+                // Handle saving journal entry
+                console.log('Save journal entry');
+              }}
+            >
+              <LinearGradient
+                colors={theme.colors.gradients.secondary}
+                style={styles.saveButtonGradient}
+              >
+                <Text style={[styles.saveButtonText, { color: theme.colors.primary }]}>
+                  Save Entry
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
     </ScrollView>
     </SafeAreaView>
   );
@@ -346,4 +427,64 @@ const styles = StyleSheet.create({
   goalDescription: {
     fontSize: 12,
   },
+  journalContainer: {
+    margin: 16,
+    backgroundColor: 'rgba(22,27,34,0.8)',
+    borderRadius: 16,
+    padding: 16,
+  },
+  journalForm: {
+
+  },
+  formGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  mealTypeButtons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  mealTypeButton: {
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+    marginRight: 8,
+    marginBottom: 8,
+  },
+  mealTypeText: {
+    fontSize: 14,
+  },
+  addFoodButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  addFoodText: {
+    fontSize: 14,
+    marginLeft: 8,
+  },
+  notesInput: {
+    padding: 10,
+    borderRadius: 8,
+    height: 100,
+    borderWidth: 1,
+  },
+  saveEntryButton: {
+    marginTop: 16,
+  },
+  saveButtonGradient: {
+    borderRadius: 8,
+    padding: 12,
+  },
+  saveButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }
 });

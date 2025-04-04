@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Dimensions, Image} from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +10,61 @@ export default function AnalyticsScreen() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState('progress');
   const [journalEntry, setJournalEntry] = useState('');
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [showGoalForm, setShowGoalForm] = useState(false);
+
+  const [newGoal, setNewGoal] = useState({
+    title: '',
+    target: '',
+    deadline: '',
+  });
+  const [goals, setGoals] = useState([
+    {
+      id: 1,
+      title: 'Weight Loss',
+      target: 'Lose 5kg',
+      progress: 60,
+      deadline: '2024-03-01'
+    },
+    {
+      id: 2,
+      title: 'Strength',
+      target: 'Bench press 80kg',
+      progress: 75,
+      deadline: '2024-02-15'
+    }
+  ]);
+
+  const handleCreateGoal = () => {
+    if (newGoal.title && newGoal.target && newGoal.deadline) {
+      setGoals([
+        ...goals,
+        {
+          id: Date.now(),
+          title: newGoal.title,
+          target: newGoal.target,
+          progress: 0,
+          deadline: newGoal.deadline
+        }
+      ]);
+      setNewGoal({ title: '', target: '', deadline: '' });
+      setShowGoalForm(false);
+    }
+  };
+
+  const handleDeleteGoal = (goalId) => {
+    setGoals(goals.filter(goal => goal.id !== goalId));
+  };
+
+  const handleUpdateProgress = (goalId) => {
+    setGoals(goals.map(goal => {
+      if (goal.id === goalId) {
+        const newProgress = Math.min(100, goal.progress + 10);
+        return { ...goal, progress: newProgress };
+      }
+      return goal;
+    }));
+  };
 
   const progressData = {
     monthlyWorkouts: 12,
@@ -29,7 +85,7 @@ export default function AnalyticsScreen() {
     // Add more workout history entries
   ];
 
-  const goals = [
+  /*const goals = [
     {
       id: 1,
       title: 'Weight Loss',
@@ -45,7 +101,7 @@ export default function AnalyticsScreen() {
       deadline: '2024-02-15'
     }
   ];
-
+*/
   return (
     <SafeAreaView style={styles.container}>
     <View style={styles.backgroundWrapper}>
@@ -135,40 +191,114 @@ export default function AnalyticsScreen() {
       )}
 
       {activeTab === 'goals' && (
-        <View style={styles.goalsContainer}>
-          {goals.map((goal) => (
-            <View key={goal.id} style={styles.goalCard}>
-              <LinearGradient
-                colors={theme.colors.gradients.card}
-                style={styles.cardGradient}
-              />
-              <Text style={[styles.goalTitle, { color: theme.colors.text }]}>
-                {goal.title}
-              </Text>
-              <Text style={[styles.goalTarget, { color: theme.colors.secondary }]}>
-                {goal.target}
-              </Text>
-              <View style={styles.progressBar}>
-                <View 
-                  style={[
-                    styles.progressFill,
-                    { 
-                      width: `${goal.progress}%`,
-                      backgroundColor: theme.colors.secondary
-                    }
-                  ]} 
-                />
-              </View>
-              <Text style={[styles.goalDeadline, { color: theme.colors.textSecondary }]}>
-                Due: {goal.deadline}
-              </Text>
-            </View>
-          ))}
-        </View>
+         <View style={styles.goalsContainer}>
+         {goals.map((goal) => (
+           <View key={goal.id} style={styles.goalCard}>
+             <LinearGradient
+               colors={theme.colors.gradients.card}
+               style={styles.cardGradient}
+             />
+             <Text style={[styles.goalTitle, { color: theme.colors.text }]}>
+               {goal.title}
+             </Text>
+             <Text style={[styles.goalTarget, { color: theme.colors.secondary }]}>
+               {goal.target}
+             </Text>
+             <View style={styles.progressBar}>
+               <View 
+                 style={[
+                   styles.progressFill,
+                   { 
+                     width: `${goal.progress}%`,
+                     backgroundColor: theme.colors.secondary
+                   }
+                 ]} 
+               />
+             </View>
+             <Text style={[styles.goalDeadline, { color: theme.colors.textSecondary }]}>
+               Due: {goal.deadline}
+             </Text>
+             <TouchableOpacity onPress={() => handleUpdateProgress(goal.id)}>
+               <Text>Update Progress</Text>
+             </TouchableOpacity>
+             <TouchableOpacity onPress={() => handleDeleteGoal(goal.id)}>
+               <Text>Delete Goal</Text>
+             </TouchableOpacity>
+           </View>
+         ))}
+         {!showGoalForm && (
+             <TouchableOpacity 
+             style={styles.createGoalButton}
+             onPress={() => setShowGoalForm(true)}
+           >
+             <LinearGradient
+               colors={theme.colors.gradients.secondary}
+               style={styles.createGoalGradient}
+             >
+               <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} />
+               <Text style={[styles.createGoalText, { color: theme.colors.primary }]}>
+                 Create New Goal
+               </Text>
+             </LinearGradient>
+           </TouchableOpacity>
+         )}
+         {showGoalForm && (
+           <View style={styles.goalFormContainer}>
+             <TextInput
+               style={[styles.goalInput, { 
+                 backgroundColor: 'rgba(255,255,255,0.05)',
+                 borderColor: theme.colors.border,
+                 color: theme.colors.text
+               }]}
+               placeholder="Goal Title"
+               placeholderTextColor="rgba(255,255,255,0.5)"
+               value={newGoal.title}
+               onChangeText={(text) => setNewGoal({ ...newGoal, title: text })}
+             />
+             <TextInput
+               style={[styles.goalInput, { 
+                 backgroundColor: 'rgba(255,255,255,0.05)',
+                 borderColor: theme.colors.border,
+                 color: theme.colors.text
+               }]}
+               placeholder="Goal Target"
+               placeholderTextColor="rgba(255,255,255,0.5)"
+               value={newGoal.target}
+               onChangeText={(text) => setNewGoal({ ...newGoal, target: text })}
+             />
+             <TextInput
+               style={[styles.goalInput, { 
+                 backgroundColor: 'rgba(255,255,255,0.05)',
+                 borderColor: theme.colors.border,
+                 color: theme.colors.text
+               }]}
+               placeholder="Deadline (YYYY-MM-DD)"
+               placeholderTextColor="rgba(255,255,255,0.5)"
+               value={newGoal.deadline}
+               onChangeText={(text) => setNewGoal({ ...newGoal, deadline: text })}
+             />
+             <View style={styles.goalFormButtons}>
+               <TouchableOpacity 
+                 style={[styles.goalFormButton, { backgroundColor: theme.colors.card }]}
+                 onPress={() => setShowGoalForm(false)}
+               >
+                 <Text style={[styles.goalFormButtonText, { color: theme.colors.text }]}>Cancel</Text>
+               </TouchableOpacity>
+               <TouchableOpacity 
+                 style={[styles.goalFormButton, { backgroundColor: theme.colors.secondary }]}
+                 onPress={handleCreateGoal}
+               >
+                 <Text style={[styles.goalFormButtonText, { color: theme.colors.primary }]}>Create Goal</Text>
+               </TouchableOpacity>
+             </View>
+           </View>
+         )}
+       </View>
       )}
 
       {activeTab === 'journal' && (
-        <View style={styles.journalContainer}>
+          <View style={styles.journalContainer}>
+          
           <TextInput
             style={[styles.journalInput, { 
               color: theme.colors.text,
@@ -181,9 +311,73 @@ export default function AnalyticsScreen() {
             value={journalEntry}
             onChangeText={setJournalEntry}
           />
+
+          <TouchableOpacity 
+            style={styles.imageUploadButton}
+            onPress={async () => {
+              try {
+                const result = await ImagePicker.launchImageLibraryAsync({
+                  mediaTypes: ['images', 'livePhotos'],
+                  allowsEditing: true,
+                  aspect: [4, 3],
+                  quality: 0.8,
+                  allowsMultipleSelection: true,
+                });
+
+                if (!result.canceled && result.assets) {
+                  const newPhotos = result.assets.map(asset => asset.uri);
+                  setPhotos(prevPhotos => [...prevPhotos, ...newPhotos]);
+                }
+              } catch (error) {
+                console.log('Error picking image:', error);
+              }
+            }}
+          >
+            <LinearGradient
+              colors={theme.colors.gradients.card}
+              style={styles.imageButtonGradient}
+            >
+              <Ionicons name="camera" size={24} color={theme.colors.text} />
+              <Text style={[styles.imageButtonText, { color: theme.colors.text }]}>
+                Add Progress Photo
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {photos.length > 0 && (
+            <View style={styles.photoGrid}>
+              {photos.map((photo, index) => (
+                <TouchableOpacity 
+                  key={index}
+                  style={styles.photoContainer}
+                  onPress={() => {
+                    // Remove photo when tapped
+                    setPhotos(prevPhotos => 
+                      prevPhotos.filter((_, i) => i !== index)
+                    );
+                  }}
+                >
+                  <Image 
+                    source={{ uri: photo }} 
+                    style={styles.photo} 
+                  />
+                  <View style={styles.removePhotoButton}>
+                    <Ionicons name="close-circle" size={24} color={theme.colors.error} />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
           <TouchableOpacity 
             style={styles.saveButton}
-            onPress={() => {/* Handle save */}}
+            onPress={() => {
+              // Handle save with photos
+              console.log('Saving entry with photos:', {
+                text: journalEntry,
+                photos: photos
+              });
+            }}
           >
             <LinearGradient
               colors={theme.colors.gradients.secondary}
@@ -358,6 +552,99 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   saveButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  goalFormContainer: {
+    backgroundColor: 'rgba(22,27,34,0.9)',
+    padding: 16,
+    borderRadius: 16,
+    marginTop: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
+  },
+  goalInput: {
+    height: 48,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    fontSize: 16,
+  },
+  goalFormButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  goalFormButton: {
+    flex: 1,
+    height: 48,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+
+  goalFormButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  createGoalButton: {
+    marginVertical: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  createGoalGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    gap: 8,
+  },
+  
+  createGoalText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+  photoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 16,
+    gap: 8,
+  },
+  photoContainer: {
+    width: (Dimensions.get('window').width - 56) / 3,
+    height: (Dimensions.get('window').width - 56) / 3,
+    borderRadius: 8,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  photo: {
+    width: '100%',
+    height: '100%',
+  },
+  removePhotoButton: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 12,
+  },
+  imageUploadButton: {
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  imageButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    gap: 8,
+  },
+  imageButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
