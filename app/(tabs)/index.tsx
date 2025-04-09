@@ -5,12 +5,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../../context/authContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GlassCard } from  '../components/GlassCard';
+import { Steps } from '@ant-design/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function DashboardScreen() {
   const theme = useTheme();
   const auth = useContext(AuthContext); // ✅ Correct way to access context
+  const [currentStep, setCurrentStep] = useState(0);
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+
+
 
   // Mock data for display
   const progress = 0.65; // 65% progress
@@ -20,11 +27,13 @@ export default function DashboardScreen() {
     exercises: 8,
   };
 
-  const stats = [
-    { label: "Workouts", value: "15", icon: "barbell" },
-    { label: "Calories", value: "12,500", icon: "flame" },
-    { label: "Streak", value: "7 days", icon: "trending-up" },
+  const dailyFlexSteps = [
+    { id: 1, title: 'Wake-up Breathwork', description: '3-minute breathing reset' },
+    { id: 2, title: 'Stretch Series', description: '10-minute flexibility flow' },
+    { id: 3, title: 'Mindset Journal', description: 'Reflect & plan your wins' },
   ];
+  
+  
 
   const upcomingSessions = [
     { 
@@ -44,6 +53,35 @@ export default function DashboardScreen() {
       virtual: false,
     },
   ];
+
+  // Load saved progress for dailyFlex on mount
+  useEffect(() => {
+    const loadProgress = async () => {
+      const saved = await AsyncStorage.getItem('@daily_flex_progress');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setCompletedSteps(parsed.completedSteps || []);
+        setCurrentStep(parsed.currentStep || 0);
+      }
+    };
+    loadProgress();
+  }, []);
+
+  // Save progress when changes occur for dailyFlex
+  useEffect(() => {
+    AsyncStorage.setItem(
+      '@daily_flex_progress',
+      JSON.stringify({ completedSteps, currentStep })
+    );
+  }, [completedSteps, currentStep]);
+
+  const handleStepPress = (index: number) => {
+    if (!completedSteps.includes(index)) {
+      setCompletedSteps((prev) => [...prev, index]);
+    }
+    setCurrentStep(index);
+  };
+
 
   console.log("🎉 Auth Context Data:", auth);
   console.log("👤 User Data from Context:", auth?.user);
@@ -81,37 +119,32 @@ export default function DashboardScreen() {
            </Text>
            </View>
           <ScrollView>
-          <TouchableOpacity style={styles.sessionCard}>
-            <View style={styles.flexCardBg}> 
-            <View style={styles.sessionContent}> 
-            <Text style={styles.sessionTitle}> 
-              "Add mock daily flex details "
-            </Text>
-            </View>
-            </View>
-
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.sessionCard}>
-            <View style={styles.flexCardBg}> 
-            <View style={styles.sessionContent}> 
-            <Text style={styles.sessionTitle}> 
-              "Add mock daily flex details "
-            </Text>
-            </View>
-            </View>
-
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.sessionCard}>
-            <View style={styles.flexCardBg}> 
-            <View style={styles.sessionContent}> 
-            <Text style={styles.sessionTitle}> 
-              "Add mock daily flex details "
-            </Text>
-            </View>
-            </View>
-
-           </TouchableOpacity>
-
+          <Steps direction="vertical" current={currentStep}>
+            {dailyFlexSteps.map((step, index) => (
+              <Steps.Step
+                key={step.id}
+                title={step.title}
+                status={
+                  completedSteps.includes(index) ? 'finish' : index === currentStep ? 'process' : 'wait'
+                }
+                icon={
+                  completedSteps.includes(index) ? (
+                    <Icon name="checkcircle" size={20} color="green" />
+                  ) : undefined
+                }
+                description={
+                  <TouchableOpacity onPress={() => handleStepPress(index)} style={styles.sessionCard}>
+                    <View style={styles.flexCardBg}>
+                      <View style={styles.sessionContent}>
+                        <Text style={styles.sessionTitle}>{step.description}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                }
+              />
+            ))}
+          </Steps>
+          
           </ScrollView>
           </GlassCard>
         </View>
