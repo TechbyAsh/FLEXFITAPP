@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../context/ThemeContext';
 import {AuthProvider} from '../context/authContext'
+import { OnboardingProvider } from '@/context/OnboardingContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -50,6 +51,7 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
+      <OnboardingProvider>
       <AuthProvider>
       <StatusBar style="light" />
       <Stack
@@ -61,6 +63,7 @@ export default function RootLayout() {
         }}
       />
        </AuthProvider>
+       </OnboardingProvider>
     </ThemeProvider>
    
   );

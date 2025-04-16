@@ -1,13 +1,14 @@
 
 import { useState, useContext } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import {registerUser} from '../services/authService'
-import {AuthContext} from '../context/authContext'
+import {registerUser} from '../../services/authService'
+import {AuthContext} from '../../context/authContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function SignupScreen() {
@@ -20,23 +21,40 @@ export default function SignupScreen() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
-  const handleSignup =  async () => {
+  const handleSignup = async () => {
     console.log('Sign Up button pressed');
     setLoading(true);
     setErrorMessage('');
-
-  try {
-    console.log("Calling register function...");
-    await register(email, password, name);
-    console.log("User registered, navigating to home...");
-    router.replace("/(tabs)");
-  } catch (error) {
-    console.error("Signup error:", error);
-    setErrorMessage(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  
+    try {
+      console.log("Calling register function...");
+      await register(email, password, name); // This should also log in the user
+  
+      // After register, get the current user
+      const currentUser = await Backendless.UserService.getCurrentUser();
+      console.log("Current user after register:", currentUser);
+  
+      // Check local onboarding flag
+      const localOnboardingStatus = await AsyncStorage.getItem('hasCompletedOnboarding');
+      console.log("Local onboarding flag:", localOnboardingStatus);
+  
+      if (currentUser && localOnboardingStatus === 'true') {
+        currentUser.hasCompletedOnboarding = true;
+  
+        // Use Data.of().save() to ensure update works
+        await Backendless.Data.of("Users").save(currentUser);
+        console.log("User onboarding status updated in Backendless");
+      }
+  
+      console.log("User registered, navigating to home...");
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("Signup error:", error);
+      setErrorMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient 

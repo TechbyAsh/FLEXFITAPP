@@ -1,11 +1,11 @@
 import { useState, useContext } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import {AuthContext} from '../context/authContext'
+import {AuthContext} from '../../context/authContext'
 
 export default function LoginScreen() {
   const theme = useTheme();

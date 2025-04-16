@@ -8,6 +8,8 @@ export const registerUser = async (email: string, password: string, name: string
       user.email = email;
       user.password = password;
       user.name = name;
+      user.hasCompletedOnboarding = true;
+      
       const registeredUser = await Backendless.UserService.register(user);
       // Store user session
     await AsyncStorage.setItem('user', JSON.stringify(registeredUser));
@@ -95,3 +97,17 @@ export const registerUser = async (email: string, password: string, name: string
     }
   };
   
+  export const saveOnboardingData = async (userId: string, onboardingData: Partial<User>) => {
+    try {
+      const user = await Backendless.Data.of('Users').findById(userId);
+      const updatedUser = {
+        ...user,
+        ...onboardingData,
+        hasCompletedOnboarding: true,
+      };
+      return await Backendless.Data.of('Users').save(updatedUser);
+    } catch (error) {
+      console.error('Error saving onboarding data:', error);
+      throw error;
+    }
+  };

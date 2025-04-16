@@ -5,7 +5,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {Spacer} from '../components/spacer'
+import {Spacer} from '../../components/spacer'
 
 export default function AnalyticsScreen() {
   const theme = useTheme();

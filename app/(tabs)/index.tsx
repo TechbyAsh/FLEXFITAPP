@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthContext } from '../../context/authContext';
 import { useContext, useEffect, useState } from 'react';
-import { GlassCard } from  '../components/GlassCard';
+import { GlassCard } from  '../../components/GlassCard';
 import { Steps } from '@ant-design/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
