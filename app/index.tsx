@@ -23,30 +23,40 @@ export default function Index() {
   useEffect(() => {
     const init = async () => {
       try {
-        const userId = await AsyncStorage.getItem('userId');
+        const userId = await AsyncStorage.getItem("userId");
         console.log("🔍 Stored User ID from AsyncStorage:", userId);
 
         if (userId) {
           const completedOnboarding = await checkOnboardingStatus(userId);
+          console.log("🔍 User hasCompletedOnboarding from backend:", completedOnboarding);
+
           if (completedOnboarding) {
-            setRedirectTo('/(tabs)');
+            setRedirectTo("/(tabs)");
           } else {
-            setRedirectTo('/onboarding');
+            setRedirectTo("/(onboarding)");
           }
         } else {
-          setRedirectTo('/(auth)/login');
+          // ✅ No user? Check if onboarding was seen locally
+          const seenOnboarding = await AsyncStorage.getItem("seenOnboarding");
+          console.log("🔍 seenOnboarding flag:", seenOnboarding);
+
+          if (seenOnboarding === "true") {
+            setRedirectTo("/(auth)/login");
+          } else {
+            setRedirectTo("/(onboarding)");
+          }
         }
       } catch (err) {
-        console.error('App init error:', err);
-        setRedirectTo('/(auth)/login');
+        console.error("App init error:", err);
+        setRedirectTo("/(auth)/login");
       } finally {
         setLoading(false);
       }
     };
 
     init();
-  }, []);
-
+  }, [])
+  
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#121212' }}>

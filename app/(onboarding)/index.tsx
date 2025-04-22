@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useOnboarding } from '@/context/OnboardingContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveOnboardingData, checkOnboardingStatus } from '../../services/authService';
 ;
 
 export default function OnboardingScreen() {
@@ -43,29 +44,37 @@ export default function OnboardingScreen() {
   };
 
  // Call this function when onboarding is complete
- const handleGetStarted = async () => {
+
+const handleGetStarted = async () => {
   try {
-    console.log("🚀 Get Started button pressed");
+    const userId = await AsyncStorage.getItem("userId");
+    console.log("🔍 Retrieved userId from AsyncStorage in onboarding:", userId);
 
-    // Store onboarding flag locally
-    await AsyncStorage.setItem('hasCompletedOnboarding', 'true');
-    setHasCompletedOnboarding(true);
-
-    // Try to get current user
-    const currentUser = await Backendless.UserService.getCurrentUser();
-    console.log("👤 Current user in onboarding:", currentUser);
-
-    if (currentUser) {
-      // Optional: update Backendless here too in case user is already logged in
-      currentUser.hasCompletedOnboarding = true;
-      await Backendless.Data.of("Users").save(currentUser);
-      console.log("✅ Onboarding flag updated in Backendless");
+    if (!userId) {
+      console.warn("⚠️ No userId found in AsyncStorage, redirecting to login");
+      router.replace("/(auth)/signup");
+      return;
     }
 
-    // Navigate to signup/login
-    router.replace('/(auth)/signup');
+    // Mark onboarding as complete in Backendless
+    const updatedUser = await Backendless.Data.of("Users").save({
+      objectId: userId,
+      hasCompletedOnboarding: true,
+    });
+
+    console.log("✅ Updated user with onboarding flag:", updatedUser);
+
+    // Optional: Double-check flag is set correctly (defensive programming)
+    const onboardingStatus = await checkOnboardingStatus(userId);
+    if (onboardingStatus) {
+      setHasCompletedOnboarding(true);
+      router.replace("/(auth)/signup");
+    } else {
+      console.warn("⚠️ Onboarding flag not set correctly, staying on onboarding");
+    }
+
   } catch (error) {
-    console.error('Error completing onboarding:', error);
+    console.error("❌ Error completing onboarding:", error);
   }
 };
 

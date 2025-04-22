@@ -1,26 +1,40 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Backendless from './backendless';
 
-export const registerUser = async (email: string, password: string, name: string) => {
-    console.log("registerUser function called with:", email, password, name); // Debugging log
-    try {
-      const user = new Backendless.User();
-      user.email = email;
-      user.password = password;
-      user.name = name;
-      user.hasCompletedOnboarding = true;
-      
-      const registeredUser = await Backendless.UserService.register(user);
-      // Store user session
+export const registerUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
+  console.log("🟡 registerUser called with:", { email, password, name });
+
+  try {
+    const user = new Backendless.User();
+    user.email = email;
+    user.password = password;
+    user.name = name;
+    user.hasCompletedOnboarding = true;
+
+    const registeredUser = await Backendless.UserService.register(user);
+    console.log("✅ Backendless registration result:", registeredUser);
+
+    // Ensure user has a valid objectId
+    if (!registeredUser?.objectId) {
+      console.warn("❗ Registered user missing objectId. Cannot save to AsyncStorage.");
+      throw new Error("Registration failed: No user ID returned.");
+    }
+
+    // Store session data
     await AsyncStorage.setItem('user', JSON.stringify(registeredUser));
-    await AsyncStorage.setItem('userId', registeredUser.objectId); // Store User ID separately
+    await AsyncStorage.setItem('userId', registeredUser.objectId);
+    console.log("✅ Saved user and userId to AsyncStorage");
 
     return registeredUser;
-  } catch (error) {
+  } catch (error: any) {
+    console.error("❌ registerUser error:", error.message);
     throw new Error(error.message);
   }
 };
-
 
   export const loginUser = async (email: string, password: string) => {
     try {
@@ -109,5 +123,15 @@ export const registerUser = async (email: string, password: string, name: string
     } catch (error) {
       console.error('Error saving onboarding data:', error);
       throw error;
+    }
+  };
+
+  export const checkOnboardingStatus = async (userId: string): Promise<boolean> => {
+    try {
+      const user = await Backendless.Data.of('Users').findById(userId);
+      return user?.hasCompletedOnboarding === true;
+    } catch (error) {
+      console.error('❌ Error checking onboarding status:', error);
+      return false; // default to false if anything fails
     }
   };

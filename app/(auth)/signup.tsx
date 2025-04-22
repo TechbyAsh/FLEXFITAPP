@@ -9,7 +9,7 @@ import { router } from 'expo-router';
 import {registerUser} from '../../services/authService'
 import {AuthContext} from '../../context/authContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Backendless from 'backendless';
 
 export default function SignupScreen() {
   const theme = useTheme();
@@ -28,28 +28,28 @@ export default function SignupScreen() {
   
     try {
       console.log("Calling register function...");
-      await register(email, password, name); // This should also log in the user
+      const user = await register(email, password, name); // Capture the returned user
+      console.log("✅ Registered user:", user);
   
-      // After register, get the current user
-      const currentUser = await Backendless.UserService.getCurrentUser();
-      console.log("Current user after register:", currentUser);
+      // Set onboarding flag directly on user
+      user.hasCompletedOnboarding = true;
   
-      // Check local onboarding flag
-      const localOnboardingStatus = await AsyncStorage.getItem('hasCompletedOnboarding');
-      console.log("Local onboarding flag:", localOnboardingStatus);
+      // Save updated user to Backendless
+      const updatedUser = await Backendless.Data.of("Users").save(user);
+      console.log("✅ User onboarding status updated in Backendless");
   
-      if (currentUser && localOnboardingStatus === 'true') {
-        currentUser.hasCompletedOnboarding = true;
+      // Store in AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
+      await AsyncStorage.setItem("userId", updatedUser.objectId);
   
-        // Use Data.of().save() to ensure update works
-        await Backendless.Data.of("Users").save(currentUser);
-        console.log("User onboarding status updated in Backendless");
-      }
+      // Optional: remove outdated local flags if any
+      await AsyncStorage.removeItem("hasCompletedOnboarding");
   
-      console.log("User registered, navigating to home...");
+      // Navigate to home screen
+      console.log("✅ Navigating to home...");
       router.replace("/(tabs)");
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error("❌ Signup error:", error);
       setErrorMessage(error.message);
     } finally {
       setLoading(false);
