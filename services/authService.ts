@@ -4,7 +4,8 @@ import Backendless from './backendless';
 export const registerUser = async (
   email: string,
   password: string,
-  name: string
+  name: string,
+  hasCompletedOnboarding: boolean,
 ) => {
   console.log("🟡 registerUser called with:", { email, password, name });
 

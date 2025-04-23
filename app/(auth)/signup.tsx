@@ -28,26 +28,20 @@ export default function SignupScreen() {
   
     try {
       console.log("Calling register function...");
-      const user = await register(email, password, name); // Capture the returned user
+      // Call the updated registerUser function with all necessary parameters
+      const user = await registerUser(email, password, name, true); // Ensure 'hasCompletedOnboarding' is true
       console.log("✅ Registered user:", user);
   
-      // Set onboarding flag directly on user
-      user.hasCompletedOnboarding = true;
+      // Store the updated user in AsyncStorage
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      await AsyncStorage.setItem("userId", user.objectId);
   
-      // Save updated user to Backendless
-      const updatedUser = await Backendless.Data.of("Users").save(user);
-      console.log("✅ User onboarding status updated in Backendless");
-  
-      // Store in AsyncStorage
-      await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
-      await AsyncStorage.setItem("userId", updatedUser.objectId);
-  
-      // Optional: remove outdated local flags if any
-      await AsyncStorage.removeItem("hasCompletedOnboarding");
+      console.log("✅ Saved user and userId to AsyncStorage");
   
       // Navigate to home screen
       console.log("✅ Navigating to home...");
       router.replace("/(tabs)");
+  
     } catch (error) {
       console.error("❌ Signup error:", error);
       setErrorMessage(error.message);
