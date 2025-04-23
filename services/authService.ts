@@ -1,41 +1,50 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Backendless from './backendless';
+
+export interface CustomUser {
+  email: string;
+  name: string;
+  objectId: string;
+  hasCompletedOnboarding: boolean;
+  [key: string]: any;
+}
 
 export const registerUser = async (
   email: string,
   password: string,
   name: string,
-  hasCompletedOnboarding: boolean,
-) => {
-  console.log("🟡 registerUser called with:", { email, password, name });
+  hasCompletedOnboarding: boolean = false
+): Promise<CustomUser> => {
+  console.log("🟡 registerUser called with:", { email, password, name, hasCompletedOnboarding });
 
   try {
     const user = new Backendless.User();
     user.email = email;
     user.password = password;
     user.name = name;
-    user.hasCompletedOnboarding = true;
+    user.hasCompletedOnboarding = hasCompletedOnboarding;
 
     const registeredUser = await Backendless.UserService.register(user);
-    console.log("✅ Backendless registration result:", registeredUser);
 
-    // Ensure user has a valid objectId
-    if (!registeredUser?.objectId) {
+    // ✅ Tell TypeScript: this is a CustomUser
+    const typedUser = registeredUser as unknown as CustomUser;
+
+    if (!typedUser?.objectId) {
       console.warn("❗ Registered user missing objectId. Cannot save to AsyncStorage.");
       throw new Error("Registration failed: No user ID returned.");
     }
 
-    // Store session data
-    await AsyncStorage.setItem('user', JSON.stringify(registeredUser));
-    await AsyncStorage.setItem('userId', registeredUser.objectId);
+    await AsyncStorage.setItem('user', JSON.stringify(typedUser));
+    await AsyncStorage.setItem('userId', typedUser.objectId);
     console.log("✅ Saved user and userId to AsyncStorage");
 
-    return registeredUser;
+    return typedUser;
   } catch (error: any) {
     console.error("❌ registerUser error:", error.message);
     throw new Error(error.message);
   }
 };
+
 
   export const loginUser = async (email: string, password: string) => {
     try {

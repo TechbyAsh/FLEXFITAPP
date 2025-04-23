@@ -14,6 +14,7 @@ import Backendless from 'backendless';
 export default function SignupScreen() {
   const theme = useTheme();
   const {register} = useContext(AuthContext) || {};
+  const { setUser, setUserId } = useContext(AuthContext)!;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,34 +22,38 @@ export default function SignupScreen() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   
-  const handleSignup = async () => {
-    console.log('Sign Up button pressed');
-    setLoading(true);
-    setErrorMessage('');
-  
-    try {
-      console.log("Calling register function...");
-      // Call the updated registerUser function with all necessary parameters
-      const user = await registerUser(email, password, name, true); // Ensure 'hasCompletedOnboarding' is true
-      console.log("✅ Registered user:", user);
-  
-      // Store the updated user in AsyncStorage
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-      await AsyncStorage.setItem("userId", user.objectId);
-  
-      console.log("✅ Saved user and userId to AsyncStorage");
-  
-      // Navigate to home screen
-      console.log("✅ Navigating to home...");
-      router.replace("/(tabs)");
-  
-    } catch (error) {
-      console.error("❌ Signup error:", error);
-      setErrorMessage(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+
+const handleSignup = async () => {
+  console.log('Sign Up button pressed');
+  setLoading(true);
+  setErrorMessage('');
+
+  try {
+    console.log("Calling register function...");
+    const user = await registerUser(email, password, name, true); // hasCompletedOnboarding = true
+    console.log("✅ Registered user:", user);
+
+    // Update Context
+    setUser(user); // <-- update AuthContext
+    setUserId(user.objectId); // <-- update AuthContext
+
+    // Optional but still good to persist
+    await AsyncStorage.setItem("user", JSON.stringify(user));
+    await AsyncStorage.setItem("userId", user.objectId);
+
+    console.log("✅ Saved user and userId to AsyncStorage");
+
+    // Navigate to home screen
+    console.log("✅ Navigating to home...");
+    router.replace("/(tabs)");
+  } catch (error) {
+    console.error("❌ Signup error:", error);
+    setErrorMessage(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <LinearGradient 
