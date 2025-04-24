@@ -32,7 +32,7 @@ export default function DetailsScreen() {
 
   const handleNext = () => {
     // In a real app, you would validate and store this data
-    router.push('/dashboard');
+    router.push('/(auth)/signup');
   };
 
   return (

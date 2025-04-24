@@ -51,8 +51,8 @@ const handleGetStarted = async () => {
     console.log("🔍 Retrieved userId from AsyncStorage in onboarding:", userId);
 
     if (!userId) {
-      console.warn("⚠️ No userId found in AsyncStorage, redirecting to login");
-      router.replace("/(auth)/signup");
+      console.warn("⚠️ No userId found in AsyncStorage, redirecting to goals");
+      router.replace("/(onboarding)/goals");
       return;
     }
 

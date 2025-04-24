@@ -10,11 +10,17 @@ import {registerUser} from '../../services/authService'
 import {AuthContext} from '../../context/authContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Backendless from 'backendless';
+import { saveOnboardingData
+ } from '@/services/onboarding.service';
+import { useOnboarding } from '@/context/OnboardingContext';
+
+
 
 export default function SignupScreen() {
   const theme = useTheme();
   const {register} = useContext(AuthContext) || {};
   const { setUser, setUserId } = useContext(AuthContext)!;
+  const { onboardingData} = useOnboarding()!;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,36 +30,42 @@ export default function SignupScreen() {
   
 
 
-const handleSignup = async () => {
-  console.log('Sign Up button pressed');
-  setLoading(true);
-  setErrorMessage('');
-
-  try {
-    console.log("Calling register function...");
-    const user = await registerUser(email, password, name, true); // hasCompletedOnboarding = true
-    console.log("✅ Registered user:", user);
-
-    // Update Context
-    setUser(user); // <-- update AuthContext
-    setUserId(user.objectId); // <-- update AuthContext
-
-    // Optional but still good to persist
-    await AsyncStorage.setItem("user", JSON.stringify(user));
-    await AsyncStorage.setItem("userId", user.objectId);
-
-    console.log("✅ Saved user and userId to AsyncStorage");
-
-    // Navigate to home screen
-    console.log("✅ Navigating to home...");
-    router.replace("/(tabs)");
-  } catch (error) {
-    console.error("❌ Signup error:", error);
-    setErrorMessage(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleSignup = async () => {
+    console.log('Sign Up button pressed');
+    setLoading(true);
+    setErrorMessage('');
+  
+    try {
+      console.log("Calling register function...");
+      const user = await registerUser(email, password, name, true);
+      console.log("✅ Registered user:", user);
+  
+      // Save onboarding data to Backendless
+      try {
+        await saveOnboardingData(user.objectId, onboardingData);
+        console.log("✅ Synced onboarding data to Backendless");
+      } catch (err) {
+        console.error("❌ Failed to sync onboarding data:", err);
+      }
+  
+      // Update context
+      setUser(user);
+      setUserId(user.objectId);
+  
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+      await AsyncStorage.setItem("userId", user.objectId);
+      console.log("✅ Saved user and userId to AsyncStorage");
+  
+      // Navigate to home screen
+      console.log("✅ Navigating to home...");
+      router.replace("/(tabs)");
+    } catch (error) {
+      console.error("❌ Signup error:", error);
+      setErrorMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient 

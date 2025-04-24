@@ -1,13 +1,17 @@
 
 import { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useOnboarding } from '@/context/OnboardingContext';
 
 export default function GoalsScreen() {
   const theme = useTheme();
   const [selectedGoals, setSelectedGoals] = useState([]);
+  const { onboardingData, setOnboardingData } = useOnboarding();
 
   const goals = [
     { id: 1, name: 'Lose Weight', icon: 'trending-down' },
@@ -26,9 +30,20 @@ export default function GoalsScreen() {
     }
   };
 
-  const handleNext = () => {
-    if (selectedGoals.length > 0) {
-      router.push('/onboarding/details');
+  const handleNext = async () => {
+    if (selectedGoals.length === 0) return;
+  
+    try {
+      // Save to context (you could also mirror this in AsyncStorage if needed)
+      setOnboardingData(prev => ({
+        ...prev,
+        fitnessGoals: selectedGoals,
+      }));
+  
+      router.push('/(onboarding)/details');
+    } catch (error) {
+      console.error('Error in onboarding step:', error);
+      Alert.alert('Something went wrong saving your goals');
     }
   };
 
@@ -172,3 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+function setOnboardingData(arg0: (prev: any) => any) {
+  throw new Error('Function not implemented.');
+}
+

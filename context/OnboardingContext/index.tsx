@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { OnboardingData } from './onBoarding.types';
 import { getOnboardingStatus } from '../../services/onboarding.service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { updateUserOnboardingField } from '../../services/onboarding.service';
 
 interface OnboardingContextProps {
   onboardingData: Partial<OnboardingData>;
@@ -11,6 +12,7 @@ interface OnboardingContextProps {
   hasCompletedOnboarding: boolean;
   setHasCompletedOnboarding: React.Dispatch<React.SetStateAction<boolean>>;
   checkOnboardingStatus: () => Promise<void>;
+  saveOnboardingField: (userId: string, data: Partial<OnboardingData>) => Promise<void>;
 }
 
 const OnboardingContext = createContext<OnboardingContextProps | undefined>(undefined);
@@ -35,6 +37,26 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     checkOnboardingStatus();
   }, []);
 
+  const saveOnboardingField = async (
+    userId: string,
+    data: Partial<OnboardingData>
+  ) => {
+    try {
+      await updateUserOnboardingField(userId, data);
+  
+      // Sync to local state
+      setOnboardingData(prev => ({
+        ...prev,
+        ...data,
+      }));
+  
+      console.log('Synced onboarding field:', data);
+    } catch (error) {
+      console.error('Failed to sync onboarding field:', error);
+      throw error;
+    }
+  }; 
+
   return (
     <OnboardingContext.Provider
       value={{
@@ -43,6 +65,7 @@ export const OnboardingProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         hasCompletedOnboarding,
         setHasCompletedOnboarding,
         checkOnboardingStatus,
+        saveOnboardingField,
       }}
     >
       {children}
