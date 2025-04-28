@@ -14,6 +14,10 @@ import { saveOnboardingData
  } from '@/services/onboarding.service';
 import { useOnboarding } from '@/context/OnboardingContext';
 
+import { loadPendingOnboardingData, saveOnboardingDataRecord, 
+  linkOnboardingDataToUser, clearPendingOnboardingData } from '../../services/onboarding.service'
+import { OnboardingData } from '@/context/OnboardingContext/onBoarding.types';
+
 
 
 export default function SignupScreen() {
@@ -40,15 +44,6 @@ export default function SignupScreen() {
       const user = await registerUser(email, password, name, true);
       console.log("✅ Registered user:", user);
   
-      // Save onboarding data to Backendless
-      try {
-        await saveOnboardingData(user.objectId, onboardingData);
-        console.log("✅ Synced onboarding data to Backendless");
-      } catch (err) {
-        console.error("❌ Failed to sync onboarding data:", err);
-      }
-  
-      // Update context
       setUser(user);
       setUserId(user.objectId);
   
@@ -56,7 +51,17 @@ export default function SignupScreen() {
       await AsyncStorage.setItem("userId", user.objectId);
       console.log("✅ Saved user and userId to AsyncStorage");
   
-      // Navigate to home screen
+      // Handle onboarding linkage
+      const pendingOnboarding = await loadPendingOnboardingData();
+      if (pendingOnboarding) {
+        console.log('✅ Found pending onboarding data, syncing...');
+        const savedOnboardingRecord = await saveOnboardingDataRecord(pendingOnboarding as OnboardingData);
+        await linkOnboardingDataToUser(user.objectId, savedOnboardingRecord.objectId);
+        await clearPendingOnboardingData();
+      } else {
+        console.log('ℹ️ No pending onboarding data found');
+      }
+  
       console.log("✅ Navigating to home...");
       router.replace("/(tabs)");
     } catch (error) {

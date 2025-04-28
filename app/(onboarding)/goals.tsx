@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'rea
 import { useTheme } from '../../context/ThemeContext';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'
+import { saveOnboardingDataToAsync } from '../../services/onboarding.service';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useOnboarding } from '@/context/OnboardingContext';
@@ -34,15 +35,10 @@ export default function GoalsScreen() {
     if (selectedGoals.length === 0) return;
   
     try {
-      // Save to context (you could also mirror this in AsyncStorage if needed)
-      setOnboardingData(prev => ({
-        ...prev,
-        fitnessGoals: selectedGoals,
-      }));
-  
-      router.push('/(onboarding)/details');
+      await saveOnboardingDataToAsync({ fitnessGoals: selectedGoals });
+      router.push('/(onboarding)/details'); 
     } catch (error) {
-      console.error('Error in onboarding step:', error);
+      console.error('Error saving onboarding step:', error);
       Alert.alert('Something went wrong saving your goals');
     }
   };
