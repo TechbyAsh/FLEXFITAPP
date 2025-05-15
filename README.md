@@ -7,7 +7,7 @@ Personalized Workouts: 6-week customized training plans
 Progress Tracking: Track workouts, calories, and fitness goals
 Journal Entries: Document progress with photos and notes
 Analytics Dashboard: Visualize fitness progress and achievements
-MyFitnessPal Integration: Track nutrition and calories
+OpenFood Api : Track nutrition and calories
 Profile Management: Customize preferences and settings
 
 Tech Stack

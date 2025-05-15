@@ -6,6 +6,7 @@ type ThemeType = {
     primary: string;
     secondary: string;
     text: string;
+    textSecondary: string;
     background: string;
     border: string;
     success: string;
@@ -18,6 +19,10 @@ type ThemeType = {
       dark: string[];
       bright: string[];
       card: string[];
+      info: string[];
+      success: string[];
+      warning: string[];
+      danger: string[];
     };
     glass: {
       background: string;
@@ -53,6 +58,7 @@ const theme: ThemeType = {
     primary: '#0D1117',
     secondary: '#4ADE80', // Bright green
     text: '#FFFFFF',
+    textSecondary: 'rgba(255, 255, 255, 0.6)',
     background: '#0D1117',
     border: '#252A33',
     success: '#4CAF50',
@@ -65,6 +71,10 @@ const theme: ThemeType = {
       dark: ['#474449', '#2D232E'],
       bright: ['#505250', '#CBD3C1'],
       card: ['rgba(22,27,34,0.9)', 'rgba(13,17,23,0.9)'],
+      info: ['#3498DB', '#2980B9'],
+      success: ['#2ECC71', '#27AE60'],
+      warning: ['#F1C40F', '#F39C12'],
+      danger: ['#E74C3C', '#C0392B']
     },
     glass: {
       background: 'rgba(30, 30, 30, 0.25)',

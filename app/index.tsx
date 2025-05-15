@@ -1,14 +1,14 @@
 // app/index.tsx
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { Redirect } from 'expo-router';
-import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Backendless from 'backendless';
 
 const checkOnboardingStatus = async (userId: string) => {
   try {
     const user = await Backendless.Data.of('Users').findById(userId);
-    console.log("📥 Fetched User Data from Backendless:", user);
+    console.log(" Fetched User Data from Backendless:", user);
     return user?.hasCompletedOnboarding || false;
   } catch (error) {
     console.error('Error checking onboarding status:', error);
@@ -24,11 +24,11 @@ export default function Index() {
     const init = async () => {
       try {
         const userId = await AsyncStorage.getItem("userId");
-        console.log("🔍 Stored User ID from AsyncStorage:", userId);
+        console.log(" Stored User ID from AsyncStorage:", userId);
 
         if (userId) {
           const completedOnboarding = await checkOnboardingStatus(userId);
-          console.log("🔍 User hasCompletedOnboarding from backend:", completedOnboarding);
+          console.log(" User hasCompletedOnboarding from backend:", completedOnboarding);
 
           if (completedOnboarding) {
             setRedirectTo("/(tabs)");
@@ -36,9 +36,9 @@ export default function Index() {
             setRedirectTo("/(onboarding)");
           }
         } else {
-          // ✅ No user? Check if onboarding was seen locally
+          // No user? Check if onboarding was seen locally
           const seenOnboarding = await AsyncStorage.getItem("seenOnboarding");
-          console.log("🔍 seenOnboarding flag:", seenOnboarding);
+          console.log(" seenOnboarding flag:", seenOnboarding);
 
           if (seenOnboarding === "true") {
             setRedirectTo("/(auth)/login");
@@ -69,5 +69,9 @@ export default function Index() {
     return <Redirect href={redirectTo} />;
   }
 
-  return null;
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>App is running</Text>
+    </View>
+  );
 }
